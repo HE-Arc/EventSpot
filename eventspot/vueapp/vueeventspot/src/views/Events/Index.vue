@@ -10,22 +10,19 @@
 
 <script>
 import { getAPI } from '../../axios-api.js'
+import { mapState } from 'vuex'
 import NavBar from '../../components/NavBar.vue'
 export default {
     name: "eventsIndex",
-    data () {
-      return {
-          APIData: []
-        }
-    },
     components: {
         NavBar
     },
+    computed: mapState(['APIData']),
     created () {
-        getAPI.get('/events/',)
+        getAPI.get('/events/', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
           .then(response => {
             console.log('Post API has recieved data')
-            this.APIData = response.data
+            this.$store.state.APIData = response.data
           })
           .catch(err => {
             console.log(err)

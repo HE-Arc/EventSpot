@@ -8,7 +8,7 @@ on:
 jobs:
  test:
   runs-on: ubuntu-latest
-   steps:
+  steps:
     - name: "Checkout reporitory"
       uses: actions/checkout@v2
     - name: Set up Ruby

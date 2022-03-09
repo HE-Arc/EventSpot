@@ -1,10 +1,28 @@
 <template>
     <div class="events">
         <NavBar></NavBar>
-        <div v-for="events in APIData" :key="events.id">
-            <h1>{{events.title}}</h1>
-            <p>{{events.description}}</p>
-        </div>
+        <main class="container">
+            <h1>Events list</h1>
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="event in APIData" :key="event.id">
+                        <td>{{event.title}}</td>
+                        <td>
+                            <a class="btn btn-primary"><i class="fa fa-eye"></i></a>
+                            <a class="btn btn-success"><i class="fa fa-pencil"></i></a>
+                            <a href="#" data-toggle="modal" data-target="#confirm-delete" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </main>
+        <MyFooter></MyFooter>
     </div>
 </template>
 
@@ -12,10 +30,12 @@
 import { getAPI } from '../../axios-api.js'
 import { mapState } from 'vuex'
 import NavBar from '../../components/NavBar.vue'
+import MyFooter from '../../components/Footer.vue'
 export default {
     name: "eventsIndex",
     components: {
-        NavBar
+        NavBar,
+        MyFooter
     },
     computed: mapState(['APIData']),
     created () {
@@ -32,5 +52,7 @@ export default {
 </script>
 
 <style scoped>
-
+    h1{
+        margin-top:3rem!important;
+    }
 </style>

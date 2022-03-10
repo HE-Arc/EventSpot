@@ -1,0 +1,25 @@
+{
+	"info": {
+		"_postman_id": "de1f7013-8d5d-4452-a4a4-fb6bb7ea190e",
+		"name": "DjangoTest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "events",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "GenerateToken",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}

@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import generics
-from . models import Event
-from . serializers import EventSerializer
+from . models import Event, User
+from . serializers import EventSerializer, UserSerializer
 from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
@@ -13,4 +13,11 @@ class EventsView(generics.RetrieveAPIView):
         queryset = self.get_queryset()
         serializer = EventSerializer(queryset, many=True)
         return Response(serializer.data)
+    
+class CreateProfileView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
         

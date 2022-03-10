@@ -8,27 +8,32 @@
       <div class="col-md-8 col-xs-12 col-sm-12" id="login">
         <div class="container-fluid ml-3">
           <div class="row">
-            <h1 class="mt-3">Login</h1>
+            <h1 class="mt-3">Register</h1>
           </div>
           <div class="row">
-            <form v-on:submit.prevent="login" class="form-group px-2">
+            <form v-on:submit.prevent="register" class="form-group px-2">
               <div class="row">
                 <input type="text" name="username" id="user" v-model="username" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="Username">
               </div>
               <div class="row">
+                <input type="email" name="emailusername" id="email" v-model="email" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="Email">
+              </div>
+              <div class="row">
                 <input type="password" name="password" id="pass" v-model="password" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="Password">
+              </div>
+              <div class="row">
+                <input type="password" name="confirm" id="confirm" v-model="confirm" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="Password confirmation">
               </div>
               <div class="row mt-3">
                 <input type="submit" value="Submit" class="btn btn-primary rounded-pill">
               </div>
               <div v-if="incorrectAuth" class="mt-2">
-                <small id="error">username or password invalid</small>
+                <small id="error">{{incorrectAuth}}</small>
               </div>
-              <div v-if="false">You have been logged out.</div>
             </form>
           </div>
           <div class="row">
-            <p>Don't have an account? <router-link :to="{ name: 'register' }" exact>Register Here</router-link></p>
+            <p>Back to <router-link :to="{ name: 'login' }" exact>Login</router-link></p>
           </div>
         </div>
       </div>
@@ -38,30 +43,69 @@
 </template>
 
 <script>
+  import { getAPI } from '../axios-api.js'
   export default {
-    name: 'login-vue',
+    name: 'register-vue',
     data () {
       return {
         username: '',
+        email: '',
         password: '',
+        confirm: '',
         incorrectAuth: false
       }
     },
     methods: {
-      login () { 
-        this.$store.dispatch('userLogin', {
-          username: this.username,
-          password: this.password
-        })
-        .then(() => {
-          this.$router.push({ name: 'eventsIndex' })
-        })
-        .catch(err => {
-          console.log(err)
-          this.incorrectAuth = true
-        })
-        }
+          register () { 
+            if(!this.username) {
+              this.incorrectAuth = "username is empty";
+              return 0;
+            }
+
+            if(!this.email) {
+              this.incorrectAuth = "email is empty";
+              return 0;
+            }
+
+            if(!this.password) {
+              this.incorrectAuth = "password is empty";
+              return 0;
+            }
+
+            if(!this.confirm) {
+              this.incorrectAuth = "password confirmation is empty";
+              return 0;
+            }
+
+            if(this.password != this.confirm) {
+              this.incorrectAuth = "password confirmation does not match";
+              return 0;
+            }
+
+            const user = {
+              username: this.username,
+              email: this.email,
+              password: this.password
+            };
+
+            getAPI.post('/profiles/', user)
+            .then(
+
+              setTimeout(() =>
+                this.$store.dispatch('userLogin', {
+                  username: this.username,
+                  password: this.password
+                })
+                .then(() => {
+                  this.$router.push({ name: 'eventsIndex' })
+                })
+              , 1000)
+            )
+            .catch(err => {
+              console.log(err)
+            })
       }
+    }
   }
 </script>
 
@@ -96,6 +140,7 @@ body {
 
 .custom-input {
   width: 100% !important;
+  min-width: 300px;
   border:0px solid transparent !important;
   border-bottom: 1px solid #aaa !important;
 }

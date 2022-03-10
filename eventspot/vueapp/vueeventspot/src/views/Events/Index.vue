@@ -2,7 +2,7 @@
     <div class="events">
         <NavBar></NavBar>
         <main class="container">
-            <h1>Events list</h1>
+            <h1 class="mt-3">Events list</h1>
             <table class="table table-hover">
                 <thead class="thead-dark">
                     <tr>
@@ -52,7 +52,5 @@ export default {
 </script>
 
 <style scoped>
-    h1{
-        margin-top:3rem!important;
-    }
+
 </style>

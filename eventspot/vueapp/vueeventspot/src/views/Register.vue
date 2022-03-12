@@ -85,7 +85,8 @@
             const user = {
               username: this.username,
               email: this.email,
-              password: this.password
+              password: this.password,
+              confirm: this.confirm
             };
 
             getAPI.post('/profiles/', user)
@@ -103,6 +104,20 @@
             )
             .catch(err => {
               console.log(err)
+              if(err.response.data['email']) {
+                this.incorrectAuth = err.response.data['email']['email'];
+                return -1;
+              }
+
+              if(err.response.data['username']) {
+                this.incorrectAuth = err.response.data['username']['username'];
+                return -1;
+              }
+
+              if(err.response.data['password']) {
+                this.incorrectAuth = err.response.data['password']['password'];
+                return -1;
+              }
             })
       }
     }

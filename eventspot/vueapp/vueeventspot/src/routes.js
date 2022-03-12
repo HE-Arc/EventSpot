@@ -2,6 +2,7 @@ import {createRouter, createWebHistory} from 'vue-router'
 import Events from './views/Events/Index.vue'
 import Login from './views/Login.vue'
 import Register from './views/Register.vue'
+import Profile from './views/Profile.vue'
 import Logout from './views/Logout.vue'
 
 const router = createRouter({
@@ -32,6 +33,15 @@ const router = createRouter({
         path: '/logout',
         name: 'logout',
         component: Logout,
+        },
+
+        {
+        path: '/profile',
+        name: 'profilePage',
+        component: Profile,
+        meta: {
+                requiresLogin: true
+            }
         },
     ],
 })

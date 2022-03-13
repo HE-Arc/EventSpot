@@ -43,6 +43,7 @@ export default {
           .then(response => {
             console.log('Post API has recieved data')
             this.$store.state.APIData = response.data
+            console.log(this.$store.state.APIData)
           })
           .catch(err => {
             console.log(err)

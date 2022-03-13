@@ -1,5 +1,6 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import Events from './views/Events/Index.vue'
+import Friends from './views/Friends/Index.vue'
 import Login from './views/Login.vue'
 import Logout from './views/Logout.vue'
 
@@ -10,6 +11,15 @@ const router = createRouter({
         path: '/',
         name: 'eventsIndex',
         component: Events,
+        meta: {
+                requiresLogin: true
+            }
+        },
+
+        {
+        path: '/friends',
+        name: 'friendsIndex',
+        component: Friends,
         meta: {
                 requiresLogin: true
             }

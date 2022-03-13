@@ -3,6 +3,8 @@
         <NavBar></NavBar>
         <main class="container">
             <h1>Events list</h1>
+            <router-link class="btn btn-primary" :to="{ name: 'eventsCreate'}">Create an event</router-link>
+ 
             <table class="table table-hover">
                 <thead class="thead-dark">
                     <tr>
@@ -14,6 +16,8 @@
                     <tr v-for="event in APIData" :key="event.id">
                         <td>{{event.title}}</td>
                         <td>
+                            <router-link :to="{ name: 'eventsShow', params: {id: event.id } }">more..</router-link>
+
                             <a class="btn btn-primary"><i class="fa fa-eye"></i></a>
                             <a class="btn btn-success"><i class="fa fa-pencil"></i></a>
                             <a href="#" data-toggle="modal" data-target="#confirm-delete" class="btn btn-danger"><i class="fa fa-trash"></i></a>

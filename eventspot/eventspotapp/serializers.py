@@ -10,9 +10,10 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id','username')
         
 class EventSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = UserSerializer(read_only=True)
+
     
     class Meta:
         model = Event
-        fields = ('id','title','user','image','description','date','lattitude','longitude')
-
+        fields = ('id','title','description','user','date','longitude','lattitude','image')
+        

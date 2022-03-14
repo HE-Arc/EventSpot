@@ -4,16 +4,9 @@
       <div class="friends-card">
         <div class="mt-5 text-center">
           <h4 class="mb-0">{{ username }}</h4>
-          <button
-            v-if="pending == true"
-            @click="accept(id)"
-            class="btn btn-success btn-sm btn-custom"
-          >
-            Accept
-          </button>
-          <button @click="destroy(id)" class="btn btn-danger btn-sm btn-custom">
-            Remove
-          </button>
+          <button v-if="pending == true" @click="accept(id)" class="btn btn-success btn-sm btn-custom">Accept</button>
+          <button v-if="pending == true" @click="decline(id)" class="btn btn-danger btn-sm btn-custom">Decline</button>
+          <button v-if="pending == false" @click="remove(id)" class="btn btn-danger btn-sm btn-custom">Remove</button>
         </div>
       </div>
     </div>
@@ -27,9 +20,20 @@ export default {
   components: {
   },
   methods: {
-    destroy(id){
+    remove(id){
       const self = this
       getAPI.delete('/friends/' + id + '/delete', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+          .then(response => {
+            console.log(response)
+            self.$router.go()
+          })
+          .catch(err => {
+            console.log(err)
+          })
+    },
+    decline(id){
+      const self = this
+      getAPI.delete('/friends/' + id + '/decline', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
           .then(response => {
             console.log(response)
             self.$router.go()

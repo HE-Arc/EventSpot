@@ -12,7 +12,7 @@
             </form>
             <div class="mb-4 row">
                 <h2>My friends</h2>
-                <CardFriends v-for="friend in APIData.friends[0].friends" :key="friend.id" :username="friend.username" :id="friend.id"/>
+                <CardFriends v-for="friend in APIData.friends[0].friends" :key="friend.id" :username="friend.username" :id="friend.id" :pending="false"/>
             </div>
             <div class="mb-4 row">
                 <h2>Friends request</h2>

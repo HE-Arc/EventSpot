@@ -76,7 +76,7 @@ class FriendRequest(models.Model):
                 sender_friend_list.add_friend(self.receiver)
                 self.is_active = False
                 self.save()
-                
+    
     def decline(self):
         self.is_active = False
         self.save()

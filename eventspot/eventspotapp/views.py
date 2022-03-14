@@ -55,6 +55,12 @@ def remove_friend(request,id):
     friend_list.unfriend(removee) # call method in model for remove friend of friend list
     return Response(status=status.HTTP_204_NO_CONTENT)
 
-
+@api_view(['DELETE'])
+def decline_friend_request(request,id):
+    current_user = request.user
+    sender = User.objects.get(id=id)
+    friend_request = FriendRequest.objects.filter(sender=sender, receiver=current_user).first()
+    friend_request.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
     
     

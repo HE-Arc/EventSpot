@@ -140,8 +140,8 @@ export default {
             console.log(error.response.headers);
           })
         }
-    }
-   // computed: mapState(['APIData']),
+    },
+    computed: mapState(['APIData']),
 }
 </script>
 

@@ -4,9 +4,19 @@
         <main class="container">
             <h1>Friends</h1>
             <h2>Add a new friend</h2>
+            <form>
+                <div class="mb-4 row">
+                    <input required type="text" class="form-control" id="username" aria-describedby="username" placeholder="Enter username">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
             <div class="mb-4 row">
                 <h2>My friends</h2>
-                <CardFriends v-for="friend in APIData[0].friends" :key="friend.id" :username="friend.username" :id="friend.id"/>
+                <CardFriends v-for="friend in APIData.friends[0].friends" :key="friend.id" :username="friend.username" :id="friend.id"/>
+            </div>
+            <div class="mb-4 row">
+                <h2>Friends request</h2>
+            <CardFriends v-for="sender in APIData.friends_requests" :key="sender.sender.id" :username="sender.sender.username" :id="sender.sender.id" :pending="true"/>   
             </div>
         </main>
         <MyFooter></MyFooter>
@@ -27,6 +37,8 @@ export default {
         CardFriends
     },
     computed: mapState(['APIData']),
+    methods: {
+    },
     created () {
         getAPI.get('/friends/', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
           .then(response => {

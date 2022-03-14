@@ -6,10 +6,10 @@
           <h4 class="mb-0">{{ username }}</h4>
           <button
             v-if="pending == true"
-            @click="update(id)"
+            @click="accept(id)"
             class="btn btn-success btn-sm btn-custom"
           >
-            Add
+            Accept
           </button>
           <button @click="destroy(id)" class="btn btn-danger btn-sm btn-custom">
             Remove
@@ -21,12 +21,23 @@
 </template>
 
 <script>
+import { getAPI } from '../axios-api';
 export default {
-  props: ["username", "id"],
+  props: ["username", "id", "pending"],
   components: {
   },
   methods: {
-    
+    destroy(id){
+      const self = this
+      getAPI.delete('/friends/' + id + '/delete', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+          .then(response => {
+            console.log(response)
+            self.$router.go()
+          })
+          .catch(err => {
+            console.log(err)
+          })
+    },  
   },
 };
 </script>

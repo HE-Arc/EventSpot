@@ -44,7 +44,9 @@ export default {
     },
     accept(id){
       const self = this
-      getAPI.post('/friends/' + id + '/accept', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+      let formData = new FormData()
+      formData.append('id',id)
+      getAPI.post('/friends/accept', formData, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
           .then(response => {
             console.log(response)
             self.$router.go()
@@ -68,37 +70,5 @@ export default {
   background-color: #fff;
   position: relative;
   height: 250px;
-}
-.upper {
-  height: 100px;
-}
-.upper img {
-  width: 100%;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-}
-.user {
-  position: relative;
-}
-.profile img {
-  height: 80px;
-  width: 80px;
-  margin-top: 2px;
-}
-.profile {
-  position: absolute;
-  top: -50px;
-  left: 38%;
-  height: 90px;
-  width: 90px;
-  border: 3px solid #fff;
-  border-radius: 50%;
-}
-.btn-custom {
-  border-radius: 15px;
-  padding-left: 20px;
-  padding-right: 20px;
-  height: 35px;
-  margin: 5px;
 }
 </style>

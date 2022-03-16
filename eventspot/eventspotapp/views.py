@@ -1,3 +1,5 @@
+from django.dispatch import receiver
+from django.http import HttpResponse, HttpResponseBadRequest
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import generics
@@ -31,23 +33,32 @@ def friends_view(request):
 
 @api_view(['POST'])
 def send_friend_request(request):
-    serializer = FriendRequestSerializer(data = request.data)
     user = request.user
-    username = request.POST.get("username")
-    receiver = User.objects.get(username=username)
-    if serializer.is_valid():
-        serializer.save(sender=user, receiver=receiver)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    username_receiver = request.data['username']
+    receiver = User.objects.get(username=username_receiver)
+
+    friend_request = FriendRequest(sender=user, receiver=receiver)
+    friend_request.save()
+    
+    return Response(username_receiver)
 
 @api_view(['POST'])
-def accept_friend_request(request,id):
+def accept_friend_request(request):
     current_user = request.user
-    sender = User.objects.get(id=id)
+    
+    try:
+        sender_id = request.data['id']
+    except KeyError: 
+        return HttpResponseBadRequest('id is required')
+    
+    # check is user exist sinon error 404
+    # check si pas deja amis --> error 409
+    sender = User.objects.get(id=sender_id)
     friend_request = FriendRequest.objects.filter(sender=sender, receiver=current_user).first()
     friend_request.accept()
     friend_request.delete()
-    return Response(status=status.HTTP_201_CREATED)
+    return Response(status.HTTP_201_CREATED)
+    
 
 @api_view(['DELETE'])
 def remove_friend(request,id):

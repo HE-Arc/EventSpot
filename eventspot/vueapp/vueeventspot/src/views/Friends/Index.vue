@@ -4,22 +4,21 @@
         <main class="container">
             <h1>Friends</h1>
             <h2>Add a new friend</h2>
-            <form>
+            <form v-on:submit.prevent="submitForm">
                 <div class="mb-4 row">
-                    <input required type="text" class="form-control" id="username" aria-describedby="username" placeholder="Enter username">
+                    <input v-model="form.username" required type="text" class="form-control" id="username" aria-describedby="username" placeholder="Enter username">
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
             <div class="mb-4 row">
                 <h2>My friends</h2>
-                <CardFriends v-for="friend in APIData.friends[0].friends" :key="friend.id" :username="friend.username" :id="friend.id" :pending="false"/>
+                <CardFriends v-for="friend in this.friends" :key="friend.id" :username="friend.username" :id="friend.id" :pending="false"/>
             </div>
             <div class="mb-4 row">
                 <h2>Friends request</h2>
-            <CardFriends v-for="sender in APIData.friends_requests" :key="sender.sender.id" :username="sender.sender.username" :id="sender.sender.id" :pending="true"/>   
+                <CardFriends v-for="friend_request in this.friends_requests" :key="friend_request.sender.id" :username="friend_request.sender.username" :id="friend_request.sender.id" :pending="true"/>   
             </div>
         </main>
-        <MyFooter></MyFooter>
     </div>
 </template>
 
@@ -27,23 +26,51 @@
 import { getAPI } from '../../axios-api.js'
 import { mapState } from 'vuex'
 import NavBar from '../../components/NavBar.vue'
-import MyFooter from '../../components/Footer.vue'
 import CardFriends from '../../components/CardFriends.vue'
 export default {
     name: "friendsIndex",
     components: {
         NavBar,
-        MyFooter,
         CardFriends
+    },
+    data() {
+        return {
+            friends : [],
+            friends_requests : [],
+            form: {
+                username : ""
+            }
+        }
     },
     computed: mapState(['APIData']),
     methods: {
+        submitForm(){
+            const self = this
+            let formData = new FormData()
+            formData.append('username', this.form.username)
+
+            getAPI.post('/friends/create', formData, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+                .then(response => {
+                    console.log(response)
+                    self.$router.go()
+                })
+                .catch(err => {
+                    console.log(err)
+                    console.log(err.response.data);
+                    console.log(err.response.status);
+                    console.log(err.response.headers);
+                })
+        }
     },
     created () {
         getAPI.get('/friends/', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
           .then(response => {
             console.log('Post API has recieved data')
             this.$store.state.APIData = response.data
+            this.friends_requests = this.APIData.friends_requests
+            if(this.APIData.friends != undefined){
+                this.friends = this.APIData.friends[0].friends
+            }
           })
           .catch(err => {
             console.log(err)

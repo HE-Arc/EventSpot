@@ -1,3 +1,4 @@
+from dataclasses import field
 from email.policy import default
 from tkinter.messagebox import NO
 from rest_framework import serializers
@@ -25,4 +26,3 @@ class FriendRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = FriendRequest
         fields = ('id','is_active','timestamp', 'receiver', 'sender')
-            

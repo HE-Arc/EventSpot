@@ -41,6 +41,20 @@ export default {
           .catch(err => {
             console.log(err)
           })
+    },
+    accept(id){
+      const self = this
+      getAPI.post('/friends/' + id + '/accept', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+          .then(response => {
+            console.log(response)
+            self.$router.go()
+          })
+          .catch(err => {
+            console.log(err)
+            console.log(err.response.data);
+            console.log(err.response.status);
+            console.log(err.response.headers);
+          })
     },  
   },
 };

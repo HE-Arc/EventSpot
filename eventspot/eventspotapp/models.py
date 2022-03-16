@@ -1,6 +1,9 @@
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
+import logging
+
+from django.http import HttpResponse
 
 # Create your models here.
 class Event (models.Model):
@@ -69,13 +72,10 @@ class FriendRequest(models.Model):
     
     def accept(self):
         receiver_friend_list = FriendList.objects.get(user=self.receiver)
-        if receiver_friend_list:
-            receiver_friend_list.add_friend(self.sender)
-            sender_friend_list = FriendList.objects.get(user=self.sender)
-            if sender_friend_list:
-                sender_friend_list.add_friend(self.receiver)
-                self.is_active = False
-                self.save()
+        sender_friend_list = FriendList.objects.get(user=self.sender)
+        sender_friend_list.add_friend(self.receiver)
+        receiver_friend_list.add_friend(self.sender)
+        self.save()
     
     def decline(self):
         self.is_active = False

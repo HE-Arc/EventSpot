@@ -1,6 +1,3 @@
-from urllib import response
-from django.dispatch import receiver
-from django.http import HttpResponse
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import generics
@@ -9,7 +6,6 @@ from . serializers import EventSerializer, FriendListSerializer, FriendRequestSe
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404
 
 # Create your views here.
 class EventsView(generics.RetrieveAPIView):
@@ -44,6 +40,15 @@ def send_friend_request(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['POST'])
+def accept_friend_request(request,id):
+    current_user = request.user
+    sender = User.objects.get(id=id)
+    friend_request = FriendRequest.objects.filter(sender=sender, receiver=current_user).first()
+    friend_request.accept()
+    friend_request.delete()
+    return Response(status=status.HTTP_201_CREATED)
+
 @api_view(['DELETE'])
 def remove_friend(request,id):
     """
@@ -62,5 +67,3 @@ def decline_friend_request(request,id):
     friend_request = FriendRequest.objects.filter(sender=sender, receiver=current_user).first()
     friend_request.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
-    
-    

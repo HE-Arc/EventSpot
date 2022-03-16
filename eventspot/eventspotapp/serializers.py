@@ -1,9 +1,5 @@
-from dataclasses import fields
 from email.policy import default
-from pyexpat import model
 from tkinter.messagebox import NO
-from urllib import request
-from django.dispatch import receiver
 from rest_framework import serializers
 from eventspotapp.models import Event, FriendList, FriendRequest
 from django.contrib.auth.models import User

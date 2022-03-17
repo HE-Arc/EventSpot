@@ -15,7 +15,7 @@ class Event (models.Model):
 class Profile(models.Model):
     
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_image = models.ImageField(upload_to='profil_images')
+    profile_image = models.ImageField(upload_to='uploads/')
     
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

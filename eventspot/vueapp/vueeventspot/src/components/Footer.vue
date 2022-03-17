@@ -1,8 +1,8 @@
 <template>
-  <footer class="bg-dark text-white text-center text-lg-start">
+  <footer class="text-white text-center text-lg-start">
       <!-- Copyright -->
-      <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-        © 2022 Copyright Boillat Ilyas &amp; Oktay David &amp; Milan Cervino
+      <div class="text-center text-dark p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+        © 2022 Copyright Boillat <span class="d-none d-sm-inline">Ilyas</span> &amp; Oktay <span class="d-none d-sm-inline">David</span> &amp; <span class="d-none d-sm-inline">Milan</span> Cervino
       </div>
       <!-- Copyright -->
     </footer>
@@ -12,7 +12,10 @@
 footer{
     position : absolute;
     bottom: 0;
-    width:    100%;
+    width: 100%;
+    height: 50px;
+    overflow:hidden;
+    background-color: #CECECE;
 }
 </style>
 

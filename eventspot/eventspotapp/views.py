@@ -30,11 +30,15 @@ class DetailProfileView(generics.RetrieveAPIView):
         serializer = ProfileSerializer(queryset, many=True)
         profile = serializer.data
         
+        image = profile[0].get('profile_image')
+        if image is not None:
+            image = 'http://localhost:8000' + image
+        
         data = {
             'username': user.username,
             'email': user.email,
             'id': user.id,
-            'profile': profile[0].get('profile_image')
+            'profile_image': image
         }
         
         return Response(data)

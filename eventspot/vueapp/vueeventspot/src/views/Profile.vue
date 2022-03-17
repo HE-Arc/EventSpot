@@ -5,23 +5,24 @@
             <div class="row col-lg-4 col-md-7 col-sm-12 col-xs-12 m-auto d-flex text-center" id="main-container">
               <div class="col-12" id="login">
                 <div class="container-fluid">
-                  <div class="row col-lg-6 col-12 mx-auto justify-content-center text-center mt-3">
+                  <div id="img-container" class="row col-lg-6 col-12 mx-auto justify-content-center text-center mt-3">
                     <!-- https://www.google.com/url?sa=i&url=http%3A%2F%2Fwww.stickpng.com%2Fimg%2Ficons-logos-emojis%2Fusers%2Fsimple-user-icon&psig=AOvVaw398t0oShOe6hE4rClKoMvz&ust=1647189309778000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCMCA5cSAwfYCFQAAAAAdAAAAABAM -->
                     <span v-if="profile_image"><img id="img-logo" width="120" height="120" alt="Profile image" :src="profile_image"></span>
                     <span v-else><img id="img-logo" width="120" height="120" alt="Profile image" src="../assets/default_profile.png"></span>
                   </div>
                   <div class="row col-lg-6 col-12 mx-auto justify-content-center text-center">
-                    <form v-on:submit.prevent="updateUser" class="form-group px-2 mx-auto justify-content-center text-center">
-                      <div class="row">
-                        <input type="file" name="profileImage" accept="image/*" />
+                    <form v-on:submit.prevent="updateUser" class="px-2 mx-auto justify-content-center text-center">
+                      <div class="form-group row mt-3">
+                        <input @change="onChange($event)" class="form-control" type="file" id="formFile" accept="image/*">
+                        <small for="formFile" class="form-text form-label">Import a picture for you profile image</small>
                       </div>
-                      <div class="row mt-3">
-                        <input type="text" name="username" id="user" v-model="username" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-1 shadow-none mx-auto my-2 custom-input" placeholder="Username">
+                      <div class="form-group row mt-3">
+                        <input type="text" name="username" id="user" v-model="formUser.username" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-1 shadow-none mx-auto my-2 custom-input" placeholder="Username">
                       </div>
-                      <div class="row">
-                        <input type="email" name="emailusername" id="email" v-model="email" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-1 shadow-none mx-auto my-2 custom-input" placeholder="Email">
+                      <div class="form-group row">
+                        <input type="email" name="emailusername" id="email" v-model="formUser.email" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-1 shadow-none mx-auto my-2 custom-input" placeholder="Email">
                       </div>
-                      <div class="row mt-3">
+                      <div class="form-group row mt-3">
                         <input type="submit" value="Update" class="btn btn-primary rounded-pill">
                       </div>
                       <div v-if="incorrectUser" class="mt-2">
@@ -36,14 +37,14 @@
                     <h3 class="mt-3">Change password</h3>
                   </div>
                   <div class="row col-lg-6 col-12 mx-auto justify-content-center text-center">
-                    <form v-on:submit.prevent="changePassword" class="form-group px-2 mx-auto justify-content-center text-center">
-                      <div class="row">
-                        <input type="password" name="password" id="pass" v-model="password" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="New password">
+                    <form v-on:submit.prevent="changePassword" class="px-2 mx-auto justify-content-center text-center">
+                      <div class="form-group row">
+                        <input type="password" name="password" id="pass" v-model="formPassword.password" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="New password">
                       </div>
-                      <div class="row">
-                        <input type="password" name="confirm" id="confirm" v-model="confirm" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="Confirmation">
+                      <div class="form-group row">
+                        <input type="password" name="confirm" id="confirm" v-model="formPassword.confirm" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="Confirmation">
                       </div>
-                      <div class="row mt-3">
+                      <div class="form-group row mt-3">
                         <input type="submit" value="Change password" class="btn btn-primary rounded-pill">
                       </div>
                       <div v-if="incorrectPassword" class="mt-2">
@@ -71,10 +72,17 @@ export default {
     name: "profilePage",
     data () {
       return {
-        username: '',
-        email: '',
-        password: '',
-        confirm: '',
+        formUser: {
+          username: '',
+          email: '',
+          profile_image: '',
+        },
+
+        formPassword: {
+          password: '',
+          confirm: '',
+        },
+
         id: '',
         profile_image: '',
         incorrectUser: false,
@@ -91,13 +99,15 @@ export default {
     created () {
         getAPI.get('/profile/', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
           .then(response => {
-            console.log('Post API has recieved data')
-            this.$store.state.APIData = response.data
+            console.log('Post API has recieved data');
+            this.$store.state.APIData = response.data;
 
-            this.username = this.$store.state.APIData.username
-            this.email = this.$store.state.APIData.email
-            this.id = this.$store.state.APIData.id
-            this.profile_image = this.$store.state.APIData.profile_image
+            console.log(response.data);
+
+            this.formUser.username = this.$store.state.APIData.username;
+            this.formUser.email = this.$store.state.APIData.email;
+            this.id = this.$store.state.APIData.id;
+            this.profile_image = this.$store.state.APIData.profile_image;
           })
           .catch(err => {
             console.log(err)
@@ -109,41 +119,88 @@ export default {
     },
 
     methods: {
+      onChange(event) {
+          console.log(event.target.value);
+          this.formUser.profile_image = event.target.files[0];
+      },
+
       updateUser(){
-        if(!this.username) {
+        if(!this.formUser.username) {
           this.incorrectUser = "username is empty";
           return 0;
         }
 
-        if(!this.email) {
+        if(!this.formUser.email) {
           this.incorrectUser = "email is empty";
           return 0;
         }
+
+        let formData = new FormData();
+
+        Object.entries(this.formUser).forEach(([key, value]) => {
+          formData.append(key, value);
+        });
+
+        getAPI.put('/profiles/update/' + this.id + '/', formData, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+        .then(response => {
+          this.successUser = "profile updated successfully";
+
+          this.$store.state.APIData.username = response.data.username;
+          this.$store.state.APIData.email = response.data.email;
+          this.$store.state.APIData.profile_image = response.data.profile_image;
+
+          console.log(response.data.profile_image);
+          
+          this.formUser.username = this.$store.state.APIData.username;
+          this.formUser.email = this.$store.state.APIData.email;
+          this.profile_image = this.$store.state.APIData.profile_image
+        })
+        .catch(err => {
+          console.log(err);
+          this.successUser = false;
+
+          if(err.response.data['email']) {
+            this.incorrectUser = err.response.data['email']['email'];
+            return -1;
+          }
+
+          if(err.response.data['username']) {
+            this.incorrectUser = err.response.data['username']['username'];
+            return -1;
+          }
+
+          if(err.response.data['authorize']) {
+            this.incorrectUser = err.response.data['authorize'][0];
+            return -1;
+          }
+
+        })
       },
 
       changePassword() {
 
-        if(!this.password) {
+        if(!this.formPassword.password) {
           this.incorrectPassword = "password is empty";
           return 0;
         }
 
-        if(!this.confirm) {
+        if(!this.formPassword.confirm) {
           this.incorrectPassword = "password confirmation is empty";
           return 0;
         }
 
-        if(this.password != this.confirm) {
+        if(this.formPassword.password != this.formPassword.confirm) {
           this.incorrectPassword = "password confirmation does not match";
           return 0;
         }
 
-        const credentials = {
-          password: this.password,
-          confirm: this.confirm
-        };
+        let formData = new FormData();
 
-        getAPI.put('/profiles/password/' + this.id + '/', credentials, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+        Object.entries(this.formPassword).forEach(([key, value]) => {
+          formData.append(key, value);
+        });
+
+        getAPI.put('/profiles/password/' + this.id + '/', formData, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
         .then(
           this.successPassword = "password updated successfully"
         )
@@ -187,6 +244,12 @@ body {
 
 #img-logo {
   width: 100%;
+  border-radius: 50%;
+}
+
+#img-container {
+  width: 160px;
+  height: 120px;
 }
 
 .custom-input {

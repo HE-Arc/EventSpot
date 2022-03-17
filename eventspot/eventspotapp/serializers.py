@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from eventspotapp.models import Event, User, Profile
+from rest_framework.response import Response
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
@@ -45,8 +46,8 @@ class CreateUserSerializer(serializers.ModelSerializer):
     
 class UpdateUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
-    username = serializers.CharField(write_only=True, required=True)
-    profile_image = serializers.ImageField(max_length=None, allow_empty_file=False)
+    username = serializers.CharField(required=True)
+    profile_image = serializers.ImageField(required=False)
     
     class Meta:
         model = User
@@ -72,10 +73,19 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         
         instance.username = validated_data['username']
         instance.email = validated_data['email']
-        instance.profile.profile_image = validated_data['profile_image']
+        
+        if 'profile_image' in validated_data:
+            instance.profile.profile_image = validated_data['profile_image']
+        
         instance.save()
-
-        return instance
+        
+        data = {
+            'username': instance.username,
+            'email': instance.email,
+            'profile_image': instance.profile.profile_image
+        }
+        
+        return data
     
 class ChangePasswordSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True)

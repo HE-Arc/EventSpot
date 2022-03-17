@@ -4,18 +4,37 @@ from rest_framework.response import Response
 from . models import Event
 from . serializers import EventSerializer
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import PageNumberPagination
+from collections import OrderedDict
 
 
 # Create your views here.
+class OneByOneItems(PageNumberPagination):
+    page_size = 1
 
+    def get_paginated_response(self, data):
+        return Response(OrderedDict([
+             ('count', self.page.paginator.count),
+             ('total', self.page_size),
+             ('current', self.page.number),
+             ('next', self.get_next_link()),
+             ('previous', self.get_previous_link()),
+             ('results', data)
+         ]))
+        
 @api_view(['GET'])
 def event_list(request):
     """
     Retrieve all events
     """
+    paginator = OneByOneItems()
+
     events = Event.objects.all()
-    serializer = EventSerializer(events,many=True)
-    return Response(serializer.data)
+    context = paginator.paginate_queryset(events, request)
+
+    serializer = EventSerializer(context,many=True)
+    
+    return paginator.get_paginated_response(serializer.data)
    
 
 @api_view(['POST'])

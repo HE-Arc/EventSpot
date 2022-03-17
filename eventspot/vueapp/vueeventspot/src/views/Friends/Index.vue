@@ -3,6 +3,7 @@
         <NavBar></NavBar>
         <main class="container">
             <h1>Friends</h1>
+            <small v-if="errors != null" class="form-text text-danger ">{{errors}}</small>
             <h2>Add a new friend</h2>
             <form v-on:submit.prevent="submitForm">
                 <div class="mb-4 row">
@@ -39,7 +40,8 @@ export default {
             friends_requests : [],
             form: {
                 username : ""
-            }
+            },
+            errors : ""
         }
     },
     computed: mapState(['APIData']),
@@ -55,10 +57,8 @@ export default {
                     self.$router.go()
                 })
                 .catch(err => {
+                    self.errors = err.response.data
                     console.log(err)
-                    console.log(err.response.data);
-                    console.log(err.response.status);
-                    console.log(err.response.headers);
                 })
         }
     },
@@ -73,6 +73,7 @@ export default {
             }
           })
           .catch(err => {
+            self.errors = err.response.data
             console.log(err)
           })
     }

@@ -3,8 +3,14 @@ from rest_framework import generics
 from . models import Event, Profile, User
 from . serializers import EventSerializer, CreateUserSerializer, UpdateUserSerializer, ChangePasswordSerializer, ProfileSerializer
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
 
-# Create your views here.
+class BlacklistRefreshView(generics.CreateAPIView):
+    def post(self, request):
+        token = RefreshToken(request.data.get('refresh'))
+        token.blacklist()
+        return Response("Success")
+
 class EventsView(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Event.objects.all()

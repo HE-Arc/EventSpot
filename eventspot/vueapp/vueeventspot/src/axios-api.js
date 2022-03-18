@@ -5,4 +5,9 @@ const getAPI = axios.create({
     timeout: 1000,
 })
 
-export { getAPI }
+const getAPIAuth = axios.create({
+    baseURL: 'http://127.0.0.1:8000',
+    timeout: 1000,
+})
+
+export { getAPI, getAPIAuth }

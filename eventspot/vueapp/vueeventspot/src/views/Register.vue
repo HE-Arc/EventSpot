@@ -103,7 +103,6 @@
               , 1000)
             )
             .catch(err => {
-              console.log(err)
               if(err.response.data['email']) {
                 this.incorrectAuth = err.response.data['email']['email'];
                 return -1;

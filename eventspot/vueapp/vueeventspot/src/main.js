@@ -2,6 +2,7 @@ import {createApp} from 'vue'
 import App from './App.vue'
 import router from './routes.js'
 import store from './store.js'
+import { getAPI, getAPIAuth } from './axios-api'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.js'
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -22,6 +23,22 @@ router.beforeEach((to, from, next) => {
       next()
     }
   })
+
+getAPI.interceptors.request.use(request => {
+    
+  if(store.state.refreshToken != undefined) {
+      const data = {
+          refresh: store.state.refreshToken
+      }
+
+      getAPIAuth.post('/api-token-refresh/', data)
+      .then(response => { 
+          store.state.accessToken = response.data.access;
+      })
+    }
+
+    return request;
+});
 
 const app = createApp(App)
 app.use(router)

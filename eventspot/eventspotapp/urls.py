@@ -1,10 +1,11 @@
 from django.urls import path
-from . views import EventsView, CreateProfileView, CreateProfileView, DetailProfileView, UpdateProfileView, UpdatePasswordView
+from . views import EventsView, CreateProfileView, CreateProfileView, DetailProfileView, UpdateProfileView, UpdatePasswordView, BlacklistRefreshView
 from rest_framework_simplejwt.views import (TokenObtainPairView,TokenRefreshView)
 
 urlpatterns = [
     path('api-token/', TokenObtainPairView.as_view()),
     path('api-token-refresh/', TokenRefreshView.as_view()),
+    path('api-token-logout/', BlacklistRefreshView.as_view(), name="logout"),
     path('events/', EventsView.as_view(), name='events_view'),
     path('profiles/', CreateProfileView.as_view(), name='createProfile_view'),
     path('profile/', DetailProfileView.as_view(), name='showProfile_view'),

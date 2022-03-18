@@ -71,7 +71,7 @@ export default {
 
 <style scoped>
 #navbar {
-  background-color: #CECECE;
+  background-color: white;
 }
 
 #dropdown {

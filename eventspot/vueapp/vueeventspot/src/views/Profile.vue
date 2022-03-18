@@ -120,7 +120,6 @@ export default {
 
     methods: {
       onChange(event) {
-          console.log(event.target.value);
           this.formUser.profile_image = event.target.files[0];
       },
 
@@ -156,7 +155,6 @@ export default {
           this.profile_image = this.$store.state.APIData.profile_image
         })
         .catch(err => {
-          console.log(err);
           this.successUser = false;
 
           if(err.response.data['email']) {
@@ -205,7 +203,6 @@ export default {
           this.successPassword = "password updated successfully"
         )
         .catch(err => {
-          console.log(err);
           this.successPassword = false;
 
           if(err.response.data['password']) {

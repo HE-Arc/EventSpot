@@ -41,6 +41,7 @@ export default {
             form: {
                 username : ""
             },
+            results: [],
             errors : ""
         }
     },
@@ -55,6 +56,18 @@ export default {
                 .then(response => {
                     console.log(response)
                     self.$router.go()
+                })
+                .catch(err => {
+                    self.errors = err.response.data
+                    console.log(err)
+                })
+        },
+        async searchMembers() {
+            await getAPI.get('/friends/search', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+                .then(response => {
+                    console.log('Post API has recieved data')
+                    this.$store.state.APIData = response.data
+                   console.log(response.data)
                 })
                 .catch(err => {
                     self.errors = err.response.data

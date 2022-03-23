@@ -1,9 +1,9 @@
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseBadRequest
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import generics
 from . models import Event, FriendList, FriendRequest
-from . serializers import EventSerializer, FriendListSerializer, FriendRequestSerializer
+from . serializers import EventSerializer, FriendListSerializer, FriendRequestSerializer, UserSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
@@ -20,8 +20,8 @@ class EventsView(generics.RetrieveAPIView):
 
 @api_view(['GET'])
 def search_users(request):
-    
-    pass
+    users = UserSerializer(User.objects.all(), many=True).data
+    return Response(users)
 
 
 @api_view(['GET'])

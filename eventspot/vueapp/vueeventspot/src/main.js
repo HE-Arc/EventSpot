@@ -3,8 +3,10 @@ import App from './App.vue'
 import router from './routes.js'
 import store from './store.js'
 import { getAPI, getAPIAuth } from './axios-api'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap/dist/js/bootstrap.js'
+
+import "bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap"
+
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { fas } from '@fortawesome/free-solid-svg-icons'

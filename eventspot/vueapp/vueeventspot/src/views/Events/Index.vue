@@ -1,7 +1,7 @@
 <template>
     <div class="events">
         <NavBar></NavBar>
-        <main class="container">
+        <!--<main class="container">
             <h1 class="mb-3">Events list</h1>
             <p v-if="this.$route.params.state == 'success'">SUCCESS</p>
  
@@ -14,7 +14,7 @@
             </div>
             <MyPagination class="mt-6" :links="'events'" />
             <IndexMap :events="APIData.results"></IndexMap>
-        </main>
+        </main>-->
         <MyFooter></MyFooter>
     </div>
 </template>
@@ -22,12 +22,14 @@
 <script>
 import { getAPI } from '../../axios-api.js'
 import { mapState } from 'vuex'
-import NavBar from '../../components/NavBar.vue'
 import MyFooter from '../../components/Footer.vue'
+import NavBar from '../../components/NavBar.vue'
+
+/*
 import CardEvent from '../../components/CardEvent.vue'
 import IndexMap from '../../components/IndexMap.vue'
 
-import MyPagination from '../../components/MyPagination.vue'
+import MyPagination from '../../components/MyPagination.vue'*/
 
 
 export default {
@@ -35,9 +37,9 @@ export default {
     components: {
         NavBar,
         MyFooter,
-        CardEvent,
-        MyPagination,
-        IndexMap
+       // CardEvent,
+       // MyPagination,
+       // IndexMap
     },
     computed: mapState(['APIData']),
     created () {

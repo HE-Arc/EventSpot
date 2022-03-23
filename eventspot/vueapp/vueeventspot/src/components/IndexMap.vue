@@ -105,6 +105,7 @@ export default {
         */
         drawMarker(event, icon) {
             console.log(event);
+            console.log(icon);
         },
 
      },

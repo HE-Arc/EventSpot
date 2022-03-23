@@ -64,6 +64,7 @@ export default {
       .then(response => {
       this.username = response.data.username;
       this.profile_image = response.data.profile_image;
+      console.log(response);
       })
   }
 };

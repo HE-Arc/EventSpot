@@ -19,35 +19,36 @@ const router = createRouter({
         component: Events,
         meta: {
                 requiresLogin: true
-            }
+            },
+        children: [
+                { 
+                    path: '/events/create', 
+                    name: 'eventsCreate',
+                    component: EventsCreate,
+                    meta: {
+                            requiresLogin: true
+                        } 
+                },
+                { 
+                path: '/events/:id/:state?', 
+                name: 'eventsShow',
+                component: EventsShow,
+                meta: {
+                        requiresLogin: true
+                    } 
+                },
+        
+                { 
+                    path: '/events/:id/update', 
+                    name: 'eventsUpdate',
+                    component: EventsUpdate,
+                    meta: {
+                            requiresLogin: true
+                        } 
+                },
+            ],
         },
 
-        { 
-        path: '/events/:id/:state?', 
-        name: 'eventsShow',
-        component: EventsShow,
-        meta: {
-                requiresLogin: true
-            } 
-        },
-
-        { 
-            path: '/events/create', 
-            name: 'eventsCreate',
-            component: EventsCreate,
-            meta: {
-                    requiresLogin: true
-                } 
-        },
-
-        { 
-            path: '/events/:id/update', 
-            name: 'eventsUpdate',
-            component: EventsUpdate,
-            meta: {
-                    requiresLogin: true
-                } 
-        },
 
         {
         path: '/login',

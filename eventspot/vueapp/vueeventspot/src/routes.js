@@ -5,6 +5,8 @@ import EventsCreate from './views/Events/Create.vue'
 import EventsUpdate from './views/Events/Create.vue'
 
 import Login from './views/Login.vue'
+import Register from './views/Register.vue'
+import Profile from './views/Profile.vue'
 import Logout from './views/Logout.vue'
 import NotFoundPage from './components/NotFoundPage.vue'
 
@@ -54,16 +56,30 @@ const router = createRouter({
         },
 
         {
+        path: '/register',
+        name: 'register',
+        component: Register,
+        },
+
+        {
         path: '/logout',
         name: 'logout',
         component: Logout,
+        },
+
+        {
+        path: '/profile',
+        name: 'profilePage',
+        component: Profile,
+        meta: {
+                requiresLogin: true
+            }
         },
         { 
             path: '/:pathMatch(.*)*',
             name: 'notFoundPage',
             component: NotFoundPage 
         },
-
        
     ],
 })

@@ -48,13 +48,15 @@ export default {
           })
           .catch(err => {
             console.log(err)
+
+            if (err.response.status === 401) {
+                this.$router.push({ name: 'logout' })
+            }
           })
     }
 }
 </script>
 
 <style scoped>
-    h1{
-        margin-top:3rem!important;
-    }
+
 </style>

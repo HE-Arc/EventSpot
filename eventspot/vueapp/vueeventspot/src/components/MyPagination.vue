@@ -1,7 +1,7 @@
 <template>
     <paginate
     v-model="APIData.current"
-    :page-count="APIData.total"
+    :page-count="Math.ceil(APIData.total/APIData.count)"
     :page-range="APIData.count"
     :click-handler="clickCallback"
     :first-last-button="true"

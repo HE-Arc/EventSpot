@@ -10,12 +10,12 @@ from collections import OrderedDict
 
 # Create your views here.
 class OneByOneItems(PageNumberPagination):
-    page_size = 1
+    page_size = 6
 
     def get_paginated_response(self, data):
         return Response(OrderedDict([
-             ('count', self.page.paginator.count),
-             ('total', self.page_size),
+             ('count', self.page_size),
+             ('total', self.page.paginator.count),
              ('current', self.page.number),
              ('next', self.get_next_link()),
              ('previous', self.get_previous_link()),

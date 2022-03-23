@@ -13,6 +13,7 @@
                 </div><br>
             </div>
             <MyPagination class="mt-6" :links="'events'" />
+            <IndexMap :events="APIData.results"></IndexMap>
         </main>
         <MyFooter></MyFooter>
     </div>
@@ -24,6 +25,8 @@ import { mapState } from 'vuex'
 import NavBar from '../../components/NavBar.vue'
 import MyFooter from '../../components/Footer.vue'
 import CardEvent from '../../components/CardEvent.vue'
+import IndexMap from '../../components/IndexMap.vue'
+
 import MyPagination from '../../components/MyPagination.vue'
 
 
@@ -34,6 +37,7 @@ export default {
         MyFooter,
         CardEvent,
         MyPagination,
+        IndexMap
     },
     computed: mapState(['APIData']),
     created () {

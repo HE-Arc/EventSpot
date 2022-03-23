@@ -1,9 +1,6 @@
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
-import logging
-
-from django.http import HttpResponse
 
 # Create your models here.
 class Event (models.Model):

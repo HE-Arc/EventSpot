@@ -18,6 +18,11 @@ class EventsView(generics.RetrieveAPIView):
         serializer = EventSerializer(queryset, many=True)
         return Response(serializer.data)
 
+@api_view(['GET'])
+def search_users(request):
+    
+    pass
+
 
 @api_view(['GET'])
 def friends_view(request):

@@ -1,12 +1,23 @@
 from rest_framework import serializers
 from eventspotapp.models import Event, User, Profile
 from rest_framework.response import Response
+from django.contrib.auth.models import User
 
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id','username')
+        
 class EventSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    
     class Meta:
         model = Event
-        fields = '__all__'
-        
+        fields = ('id','title','description','user','date','longitude','lattitude','image','is_private')
+            
 class CreateUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
     username = serializers.CharField(write_only=True, required=True)

@@ -98,7 +98,7 @@
                   password: this.password
                 })
                 .then(() => {
-                  this.$router.push({ name: 'eventsIndex' })
+                  this.$router.push({ name: 'events' })
                 })
               , 1000)
             )

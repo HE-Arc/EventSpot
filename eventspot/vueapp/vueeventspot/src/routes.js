@@ -48,7 +48,7 @@ const router = createRouter({
 
         {
         path: '/friends',
-        name: 'friendsIndex',
+        name: 'friends',
         component: Friends,
         meta: {
                 requiresLogin: true

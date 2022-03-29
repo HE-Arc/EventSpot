@@ -4,6 +4,8 @@
         <main class="container">
             <h1>Friends</h1>
             <small v-if="errors != null" class="form-text text-danger ">{{errors}}</small>
+            <FlashMessage :type="'success'" :message="'ceci est mon erreur'"></FlashMessage>
+
             <h2>Add a new friend</h2>
             <form v-on:submit.prevent="submitForm">
                 <div class="mb-4 row">
@@ -28,11 +30,14 @@ import { getAPI } from '../../axios-api.js'
 import { mapState } from 'vuex'
 import NavBar from '../../components/NavBar.vue'
 import CardFriends from '../../components/CardFriends.vue'
+import FlashMessage from '../../components/FlashMessage.vue'
+
 export default {
     name: "friendsIndex",
     components: {
         NavBar,
-        CardFriends
+        CardFriends,
+        FlashMessage
     },
     data() {
         return {

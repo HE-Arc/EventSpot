@@ -16,7 +16,7 @@
             <router-link class="nav-link text-dark" active-class="active" :to="{ name: 'events' }" exact>Events</router-link>
           </li>
           <li v-show="username" class="nav-item">
-            <a class="nav-link text-dark">Friends</a>
+            <router-link class="nav-link text-dark" active-class="active" :to="{ name: 'friends' }" exact>Friends</router-link>
           </li>
         </ul>
         <ul v-if="username" class="navbar-nav ml-auto">

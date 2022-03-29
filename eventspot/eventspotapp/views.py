@@ -3,13 +3,14 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import generics
 from . models import Event, Profile, User
-from . serializers import EventSerializer, CreateUserSerializer, UpdateUserSerializer, ChangePasswordSerializer, ProfileSerializer
+from . serializers import EventSerializer, CreateUserSerializer, UpdateUserSerializer, ChangePasswordSerializer, ProfileSerializer,BlacklistRefreshViewSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.pagination import PageNumberPagination
 from collections import OrderedDict
 
 class BlacklistRefreshView(generics.CreateAPIView):
+    serializer_class = BlacklistRefreshViewSerializer
     def post(self, request):
         token = RefreshToken(request.data.get('refresh'))
         token.blacklist()

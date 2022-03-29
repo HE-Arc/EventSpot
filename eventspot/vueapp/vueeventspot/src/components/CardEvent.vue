@@ -1,6 +1,6 @@
 <template>
     <div class="col-md-4">
-        <router-link class="card myCard" :to="{ name: 'eventsShow', params: {id: event.id } }">
+        <router-link class="card myCard" :to="{ name: 'events.show', params: {id: event.id } }">
             <div class="card-body">
                 <img v-if="event.image" class="myImg  img-responsive" :src="`http://localhost:8000${event.image}`" >
                 <img v-else class="myImg  img-responsive" src="@/assets/default.jpg" alt="default" >

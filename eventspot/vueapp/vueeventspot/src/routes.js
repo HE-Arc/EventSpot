@@ -14,41 +14,37 @@ const router = createRouter({
     history: createWebHistory(),
     routes: [
         {
-        path: '/:state?',
-        name: 'eventsIndex',
+        path: '/events/:state?',
+        name: 'events',
         component: Events,
         meta: {
-                requiresLogin: true
             },
-        children: [
-                { 
-                    path: '/events/create', 
-                    name: 'eventsCreate',
-                    component: EventsCreate,
-                    meta: {
-                            requiresLogin: true
-                        } 
-                },
-                { 
-                path: '/events/:id/:state?', 
-                name: 'eventsShow',
-                component: EventsShow,
-                meta: {
-                        requiresLogin: true
-                    } 
-                },
-        
-                { 
-                    path: '/events/:id/update', 
-                    name: 'eventsUpdate',
-                    component: EventsUpdate,
-                    meta: {
-                            requiresLogin: true
-                        } 
-                },
-            ],
+        },
+        { 
+        path: '/events/create', 
+        name: 'events.create',
+        component: EventsCreate,
+        meta: {
+                requiresLogin: true
+            } 
+        },
+        { 
+        path: '/events/:id/:state?', 
+        name: 'events.show',
+        component: EventsShow,
+        meta: {
+                requiresLogin: true
+            } 
         },
 
+        { 
+        path: '/events/:id/update', 
+        name: 'events.update',
+        component: EventsUpdate,
+        meta: {
+                requiresLogin: true
+            } 
+        },
 
         {
         path: '/login',

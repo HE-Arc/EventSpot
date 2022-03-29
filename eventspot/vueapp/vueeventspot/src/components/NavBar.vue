@@ -1,7 +1,7 @@
 <template>
   <header>
     <nav class="navbar navbar-expand-md navbar-light" id="navbar">
-      <router-link class="mr-4 d-none d-md-inline-block" :to="{ name: 'eventsIndex' }" exact>
+      <router-link class="mr-4 d-none d-md-inline-block" :to="{ name: 'events' }" exact>
         <img id="img-logo" alt="EventSpot Logo" width="50" height="50" src="../assets/mylogo.png">
       </router-link>
       <a class="navbar-brand" href="/">EventSpot</a>
@@ -13,7 +13,7 @@
       <div class="collapse navbar-collapse" id="navbarToggle">
         <ul class="navbar-nav">
           <li v-show="username" class="nav-item">
-            <router-link class="nav-link text-dark" active-class="active" :to="{ name: 'eventsIndex' }" exact>Events</router-link>
+            <router-link class="nav-link text-dark" active-class="active" :to="{ name: 'events' }" exact>Events</router-link>
           </li>
           <li v-show="username" class="nav-item">
             <a class="nav-link text-dark">Friends</a>

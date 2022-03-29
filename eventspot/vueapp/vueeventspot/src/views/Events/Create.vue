@@ -21,7 +21,7 @@
                         <div class="form-group mb-2">
                             <label for="date">Date</label>
                             <input required v-model="form.date" type="datetime-local" :min="Date.now()" class="form-control" id="date" aria-describedby="date">
-                            <small  v-if="errors.date == null" class="form-text text-muted">Enter a title to identify your event</small>
+                            <small  v-if="errors.date == null" class="form-text text-muted">Enter a date for your event</small>
                             <small v-else class="form-text text-danger ">{{errors.date[0]}}</small>
                         </div>
                         <div class="form-group mb-2" >
@@ -204,7 +204,7 @@ export default {
             console.log(event.target.value);
             this.form.image = event.target.files[0]
         },
-        submitForm(){
+        async submitForm(){
           
           let formData = new FormData();
           const self = this;
@@ -216,14 +216,15 @@ export default {
            if(this.form.image == null)
             formData.delete('image');
 
-          this.requestApi(this.targetApi, formData,
+          await this.requestApi(this.targetApi, formData,
           { headers: {
               Authorization: `Bearer ${this.$store.state.accessToken}`}
           })
           .then(response => {
-            this.$router.push({ name: 'eventsShow', params: { id: response.data.id , state:"success"} })
+            this.$router.push({ name: 'events.show', params: { id: response.data.id , state:"success"} })
           })
           .catch(error => {
+            console.log(error);
               if(error.response.status == '400')
               {
                   self.errors = error.response.data;

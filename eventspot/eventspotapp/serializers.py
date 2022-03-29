@@ -10,6 +10,11 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id','username')
         
+class BlacklistRefreshViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+                
 class EventSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
 

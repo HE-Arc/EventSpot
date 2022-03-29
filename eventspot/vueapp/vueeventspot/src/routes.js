@@ -1,9 +1,9 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import Events from './views/Events/Index.vue'
+import Friends from './views/Friends/Index.vue'
 import EventsShow from './views/Events/Show.vue'
 import EventsCreate from './views/Events/Create.vue'
 import EventsUpdate from './views/Events/Create.vue'
-
 import Login from './views/Login.vue'
 import Register from './views/Register.vue'
 import Profile from './views/Profile.vue'
@@ -44,6 +44,15 @@ const router = createRouter({
         meta: {
                 requiresLogin: true
             } 
+        },
+
+        {
+        path: '/friends',
+        name: 'friendsIndex',
+        component: Friends,
+        meta: {
+                requiresLogin: true
+            }
         },
 
         {

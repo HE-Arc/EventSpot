@@ -1,8 +1,10 @@
+from dataclasses import field
+from email.policy import default
+from tkinter.messagebox import NO
 from rest_framework import serializers
-from eventspotapp.models import Event, User, Profile
-from rest_framework.response import Response
+from eventspotapp.models import Event, FriendList, FriendRequest, User, Profile
 from django.contrib.auth.models import User
-
+from rest_framework.response import Response
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -22,6 +24,18 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ('id','title','description','user','date','longitude','lattitude','image','is_private')
+        
+class FriendListSerializer(serializers.ModelSerializer):
+    friends = UserSerializer(many=True, read_only=True)
+    class Meta:
+        model = FriendList
+        fields = ('id','user','friends')
+        
+class FriendRequestSerializer(serializers.ModelSerializer):
+    sender = UserSerializer(many=False, read_only=True)
+    class Meta:
+        model = FriendRequest
+        fields = ('id','receiver', 'sender')
             
 class CreateUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)

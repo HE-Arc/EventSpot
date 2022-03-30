@@ -4,15 +4,19 @@
 </template>
 
 <script>
-  export default {
-    name: 'logout-vue',
-    created () {
-      this.$store.dispatch('userLogout')
-        .then(() => {
-          this.$router.push({ name: 'login' })
-        })
-    }
+import { getAPI } from '../axios-api.js'
+export default {
+  name: 'logout-vue',
+  created () {
+    this.$store.dispatch('userLogout')
+    .then(() => {
+      getAPI.post('/api-token-logout/', this.$store.state.refreshToken)
+      .then(() => { 
+        this.$router.push({ name: 'login' })
+      })
+    })
   }
+}
 </script>
 
 <style>

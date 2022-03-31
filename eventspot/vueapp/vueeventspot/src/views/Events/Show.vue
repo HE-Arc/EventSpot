@@ -4,7 +4,7 @@
         <main class="container">
             <p v-if="this.$route.params.state == 'success'">SUCCESS</p>
             <h1>{{APIData.title}}</h1><br>
-            <div class="form-group mb-3">
+            <div v-if="APIData.user.username == this.$store.state.username" class="form-group mb-3">
                 <router-link  v-if="APIData.user != undefined" class="btn btn-success" :to="{ name: 'events.update', params: {id: APIData.id } }">Update</router-link>&nbsp;
                 <a href="#" data-toggle="modal" data-target="#confirm-delete" @click="destroy()" class="btn btn-danger">Delete</a><br>
             </div>

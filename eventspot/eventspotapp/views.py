@@ -10,6 +10,7 @@ from . serializers import EventSerializer, CreateUserSerializer, UpdateUserSeria
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.pagination import PageNumberPagination
 from collections import OrderedDict
+from django.db.models import Q
 
 class BlacklistRefreshView(generics.CreateAPIView):
     serializer_class = BlacklistRefreshViewSerializer
@@ -38,7 +39,13 @@ def event_list(request):
     """
     paginator = OneByOneItems()
 
-    events = Event.objects.all()
+    
+    friendsList = FriendList.objects.get(user=request.user)
+    
+    events = Event.objects.all().filter(Q(user__id__in=friendsList.friends.all()) 
+                                        | Q(is_private=False) 
+                                        | Q(user=request.user)).distinct()
+    
     context = paginator.paginate_queryset(events, request)
 
     serializer = EventSerializer(context,many=True)
@@ -69,16 +76,28 @@ def event_detail(request, id):
     except Event.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+    friendsList = FriendList.objects.get(user=request.user)
+    eventsAuthorize = Event.objects.all().filter(Q(user__id__in=friendsList.friends.all()) 
+                                        | Q(is_private=False) 
+                                        | Q(user=request.user)).distinct()
+
+    if event not in eventsAuthorize:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+        
     if request.method == 'GET':
         serializer = EventSerializer(event)
         return Response(serializer.data)
     elif request.method == 'PUT':
+        if event.user != request.user:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
         serializer = EventSerializer(event, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
+        if event.user != request.user:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
         event.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
       

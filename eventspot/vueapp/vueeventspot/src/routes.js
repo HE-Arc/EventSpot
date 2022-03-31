@@ -8,11 +8,20 @@ import Login from './views/Login.vue'
 import Register from './views/Register.vue'
 import Profile from './views/Profile.vue'
 import Logout from './views/Logout.vue'
+import Home from './views/Home.vue'
+
 import NotFoundPage from './components/NotFoundPage.vue'
+import UnauthorisedPage from './components/UnauthorisedPage.vue'
+
 
 const router = createRouter({
     history: createWebHistory(),
     routes: [
+        {
+            path: '/',
+            name: 'home',
+            component: Home
+        },
         {
         path: '/events/:state?',
         name: 'events',
@@ -80,6 +89,11 @@ const router = createRouter({
         meta: {
                 requiresLogin: true
             }
+        },
+        { 
+            path: '/401',
+            name: 'unauthorisedPage',
+            component: UnauthorisedPage 
         },
         { 
             path: '/:pathMatch(.*)*',

@@ -8,9 +8,10 @@ const store = createStore({
      APIData: ''
   },
   mutations: {
-    updateStorage (state, { access, refresh }) {
+    updateStorage (state, { access, refresh, username }) {
       state.accessToken = access
       state.refreshToken = refresh
+      state.username = username
 
       localStorage.setItem('accessToken', access)
       localStorage.setItem('refreshToken', refresh)
@@ -41,7 +42,7 @@ const store = createStore({
           password: usercredentials.password
         })
           .then(response => {
-            context.commit('updateStorage', { access: response.data.access, refresh: response.data.refresh }) 
+            context.commit('updateStorage', { access: response.data.access, refresh: response.data.refresh, username:usercredentials.username }) 
             resolve()
           })
           .catch(err => {

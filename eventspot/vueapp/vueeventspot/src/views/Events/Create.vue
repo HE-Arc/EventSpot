@@ -128,7 +128,7 @@ export default {
         this.requestApi = getAPI.put;
         this.targetApi = `events/${this.APIData.id}/update`;
 
-        this.map.setView([this.form.lattitude,this.form.longitude], 10);
+        this.map.setView([this.form.lattitude,this.form.longitude], 5);
         this.clickMarker = L.marker([this.form.lattitude,this.form.longitude], {
                 icon: this.clickMarkerIcon,
              }).addTo(this.map);
@@ -143,7 +143,7 @@ export default {
   },
   mounted() {
     // initialize Leaflet
-    this.map = L.map('mapContainer').setView({lon: 0, lat: 0}, 2);
+    this.map = L.map('mapContainer').setView({lon: 48.8566, lat: 2.3522}, 5);
     this.map.addControl(
         new L.Control.Search({
           url: "https://nominatim.openstreetmap.org/search?format=json&q={s}",
@@ -158,7 +158,7 @@ export default {
       );
     // add the OpenStreetMap tiles
     var gl = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
+        minZoom: 5,
         attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
     }).addTo(this.map);
     this.map.on('zoomend',function(){

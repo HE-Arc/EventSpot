@@ -47,7 +47,7 @@ const router = createRouter({
         },
 
         {
-        path: '/friends',
+        path: '/friends/:state?',
         name: 'friends',
         component: Friends,
         meta: {

@@ -19,8 +19,6 @@ class BlacklistRefreshViewSerializer(serializers.ModelSerializer):
                 
 class EventSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
-
-    
     class Meta:
         model = Event
         fields = ('id','title','description','user','date','longitude','lattitude','image','is_private')

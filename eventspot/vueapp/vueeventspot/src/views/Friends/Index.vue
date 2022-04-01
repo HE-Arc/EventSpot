@@ -10,20 +10,45 @@
                     <div class="w-50 input-group-pers">
                         <div class="input-group">
                             <input v-model="form.username" required type="text" class="form-control" id="username" aria-describedby="username" placeholder="Enter username">
+                            <ul class="list-group" v-if="results.length > 0 && form.username">
+                                    <a v-for="result in results" :key="result.id" class="custom-a" href="#" @click="addValueToInput(result.username)">
+                                  <li class="list-group-item list-group-item-action">
+                                     {{result.username}}
+                                  </li>
+                                  </a>
+                            </ul>
                             <button class="btn btn-success" type="submit">Send</button>
                         </div>
                     </div>
                 </div>
             </form>
-            
+
             <div class="row">
                 <h2>My friends</h2>
-                <CardFriends v-for="friend in this.friends" :key="friend.id" :username="friend.username" :id="friend.id" :pending="false" @messageUpdate="message = $event" @typeUpdate="type = $event" @dataUpdate="getData"/>
+                <CardFriends v-for="friend in this.friends" 
+                    :key="friend.id" 
+                    :username="friend.username" 
+                    :id="friend.id"
+                    :profileImage="friend.profile.profile_image"
+                    :pending="false" 
+                    @messageUpdate="message = $event" 
+                    @typeUpdate="type = $event" 
+                    @dataUpdate="getData"
+                />
             </div>
 
             <div class="mb-4 row">
                 <h2>Friends request</h2>
-                <CardFriends v-for="friend_request in this.friends_requests" :key="friend_request.sender.id" :username="friend_request.sender.username" :id="friend_request.sender.id" :pending="true" @messageUpdate="message = $event" @typeUpdate="type = $event" @dataUpdate="getData"/>   
+                <CardFriends v-for="friend_request in this.friends_requests" 
+                    :key="friend_request.sender.id" 
+                    :username="friend_request.sender.username" 
+                    :id="friend_request.sender.id"
+                    :profileImage="friend_request.sender.profile.profile_image"
+                    :pending="true" 
+                    @messageUpdate="message = $event"
+                    @typeUpdate="type = $event"
+                    @dataUpdate="getData"
+                />   
             </div>
         </main>
     </div>
@@ -48,12 +73,18 @@ export default {
             friends : [],
             friends_requests : [],
             form: {
-                username : ""
+                username : null
             },
             results: [],
             message : null,
             type: null
         }
+    },
+    watch:{
+        'form.username': function (newVal, oldVal){
+            console.log(newVal,oldVal)
+            this.searchMembers();
+        },
     },
     computed: mapState(['APIData']),
     methods: {
@@ -80,16 +111,16 @@ export default {
                 })
         },
         async searchMembers() {
-            await getAPI.get('/friends/search', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+            await getAPI.get('/friends/search', { params: {username:this.form.username},headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
                 .then(response => {
-                    console.log('Post API has recieved data')
-                    this.$store.state.APIData = response.data
-                    console.log(response.data)
+                    this.results = response.data
                 })
                 .catch(err => {
-                    self.errors = err.response.data
                     console.log(err)
                 })
+        },
+        addValueToInput(username) {
+            this.form.username = username;
         },
         getData(){
             getAPI.get('/friends/', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})

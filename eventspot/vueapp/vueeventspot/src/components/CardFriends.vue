@@ -2,7 +2,10 @@
   <div class="col-lg-4">
     <div class="text-center card-box">
       <div class="member-card pt-2 pb-2">
-        <div class="thumb-lg member-thumb mx-auto"><img src="https://bootdey.com/img/Content/avatar/avatar2.png" class="rounded-circle img-thumbnail" alt="profile-image"></div>
+        <div class="thumb-lg member-thumb mx-auto">
+          <img v-if="profileImage!=null" :src="`http://localhost:8000${profileImage}`" class="rounded-circle img-thumbnail" alt="profile-image">
+          <img v-else src="@/assets/default_profile.png" class="rounded-circle img-thumbnail" alt="profile-image">
+        </div>
         <div>
           <h4>{{ username }}</h4>
         </div>
@@ -16,40 +19,45 @@
 
 <script>
 import { getAPI } from '../axios-api';
+import VueSimpleAlert from "vue3-simple-alert"
 export default {
-  props: ["username", "id", "pending"],
+  props: ["username", "id", "pending", "profileImage"],
   components: {
   },
   methods: {
     remove(id){
-      getAPI.delete('/friends/' + id + '/delete', {headers: {Authorization: `Bearer ${this.$store.state.accessToken}`, "Accept": "application/json"}})
-          .then(response => {
-            console.log(response)
-            this.$emit("messageUpdate", 'Successfully removed that friend.')
-            this.$emit("typeUpdate", "success")
-            this.$emit("dataUpdate", null)
-          })
-          .catch(err => {
-            console.log(err)
-            this.$emit("messageUpdate", 'User not found.')
-            this.$emit("typeUpdate", "danger")
-            this.$emit("dataUpdate", null)
-          })
+      VueSimpleAlert.confirm("Are you sure you want to remove this friend ?").then(() => {
+        getAPI.delete('/friends/' + id + '/delete', {headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+            .then(response => {
+              console.log(response)
+              this.$emit("messageUpdate", 'Successfully removed that friend.')
+              this.$emit("typeUpdate", "success")
+              this.$emit("dataUpdate", null)
+            })
+            .catch(err => {
+              console.log(err)
+              this.$emit("messageUpdate", 'User not found.')
+              this.$emit("typeUpdate", "danger")
+              this.$emit("dataUpdate", null)
+            })
+      }).catch(()=>{})
     },
     decline(id){
-      getAPI.delete('/friends/' + id + '/decline', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
-          .then(response => {
-            console.log(response)
-            this.$emit("messageUpdate", 'Friend request declined.')
-            this.$emit("typeUpdate", "success")
-            this.$emit("dataUpdate", null)
-          })
-          .catch(err => {
-            console.log(err)
-            this.$emit("messageUpdate", 'User not found.')
-            this.$emit("typeUpdate", "danger")
-            this.$emit("dataUpdate", null)
-          })
+      VueSimpleAlert.confirm("Are you sure you want to decline the friend request ?").then(() => {
+        getAPI.delete('/friends/' + id + '/decline', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+            .then(response => {
+              console.log(response)
+              this.$emit("messageUpdate", 'Friend request declined.')
+              this.$emit("typeUpdate", "success")
+              this.$emit("dataUpdate", null)
+            })
+            .catch(err => {
+              console.log(err)
+              this.$emit("messageUpdate", 'User not found.')
+              this.$emit("typeUpdate", "danger")
+              this.$emit("dataUpdate", null)
+            })
+      }).catch(()=>{})
     },
     accept(id){
       let formData = new FormData()

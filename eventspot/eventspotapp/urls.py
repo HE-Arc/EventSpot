@@ -24,7 +24,8 @@ urlpatterns = [
     path('profiles/password/<int:pk>/', views.UpdatePasswordView.as_view(), name='updatePassword_view'),
   
     path('events/create', views.event_create, name='events_create'),
-    path('events/', views.event_list, name='events_list'),
+    path('events/public', views.public_event_list, name='events_list'),
+    path('events/', views.my_event_list, name='events_list'),
     path('events/<id>', views.event_detail, name='events_detail'),
     path('events/<id>/delete', views.event_detail, name='events_delete'),
     path('events/<id>/update', views.event_detail, name='events_update'),

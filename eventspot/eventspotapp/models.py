@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -15,7 +14,11 @@ class Event (models.Model):
     image = models.ImageField(upload_to='uploads/',blank =True)
     is_private = models.BooleanField(default=False)
 
-
+    def save(self, *args, **kwargs):
+        if self.date < timezone.now():
+            self.date = timezone.now()
+        super(Event, self).save(*args, **kwargs)
+        
     def __str__(self):
         return self.title
     
@@ -24,7 +27,7 @@ class FriendList(models.Model):
     friends = models.ManyToManyField(User, blank=True, related_name="friends") 
     
     def __str__(self):
-        return self.user.username
+        return self.friends[0].user.username
     
     def add_friend(self, account): # user ? 
         """

@@ -33,19 +33,36 @@ class OneByOneItems(PageNumberPagination):
          ]))
         
 @api_view(['GET'])
-def event_list(request):
+def public_event_list(request):
+    """
+    Retrieve all events
+    """
+    
+    friendsList = FriendList.objects.get(user=request.user)
+    
+    events = Event.objects.all().filter(Q(user__id__in=friendsList.friends.all()) 
+                                        | Q(is_private=False) 
+                                        | Q(user=request.user)).distinct()
+    
+
+    serializer = EventSerializer(events,many=True)
+    
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def my_event_list(request):
     """
     Retrieve all events
     """
     paginator = OneByOneItems()
-
-    events = Event.objects.all()
+    
+    events = Event.objects.all().filter(user=request.user)
+    
     context = paginator.paginate_queryset(events, request)
 
     serializer = EventSerializer(context,many=True)
     
-    return paginator.get_paginated_response(serializer.data)
-   
+    return paginator.get_paginated_response(serializer.data)   
 
 @api_view(['POST'])
 def event_create(request):
@@ -70,16 +87,28 @@ def event_detail(request, id):
     except Event.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+    friendsList = FriendList.objects.get(user=request.user)
+    eventsAuthorize = Event.objects.all().filter(Q(user__id__in=friendsList.friends.all()) 
+                                        | Q(is_private=False) 
+                                        | Q(user=request.user)).distinct()
+
+    if event not in eventsAuthorize:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+        
     if request.method == 'GET':
         serializer = EventSerializer(event)
         return Response(serializer.data)
     elif request.method == 'PUT':
+        if event.user != request.user:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
         serializer = EventSerializer(event, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
+        if event.user != request.user:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
         event.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
       

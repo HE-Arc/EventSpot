@@ -19,15 +19,14 @@
                 <input type="password" name="password" id="pass" v-model="password" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="Password">
               </div>
               <div class="row mt-3">
-                <input type="submit" value="Submit" class="btn btn-primary rounded-pill">
+                <input type="submit" value="Submit" class="btn btn-primary">
               </div>
               <div v-if="incorrectAuth" class="mt-2">
                 <small id="error">username or password invalid</small>
               </div>
-              <div v-if="false">You have been logged out.</div>
             </form>
           </div>
-          <div class="row">
+          <div class="row mt-3">
             <p>Don't have an account? <router-link :to="{ name: 'register' }" exact>Register Here</router-link></p>
           </div>
         </div>

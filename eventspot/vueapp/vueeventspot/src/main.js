@@ -38,7 +38,7 @@ getAPI.interceptors.request.use(request => {
       }
 
       getAPIAuth.post('/api-token-refresh/', data)
-      .then(response => { 
+      .then(response => {
           store.state.accessToken = response.data.access;
       })
     }

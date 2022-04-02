@@ -83,7 +83,7 @@ const router = createRouter({
         },
 
         {
-        path: '/profile',
+        path: '/profile:state?',
         name: 'profilePage',
         component: Profile,
         meta: {

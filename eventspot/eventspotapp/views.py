@@ -33,12 +33,10 @@ class OneByOneItems(PageNumberPagination):
          ]))
         
 @api_view(['GET'])
-def event_list(request):
+def public_event_list(request):
     """
     Retrieve all events
     """
-    paginator = OneByOneItems()
-
     
     friendsList = FriendList.objects.get(user=request.user)
     
@@ -46,12 +44,25 @@ def event_list(request):
                                         | Q(is_private=False) 
                                         | Q(user=request.user)).distinct()
     
+
+    serializer = EventSerializer(events,many=True)
+    
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def my_event_list(request):
+    """
+    Retrieve all events
+    """
+    paginator = OneByOneItems()
+    
+    events = Event.objects.all().filter(user=request.user)
+    
     context = paginator.paginate_queryset(events, request)
 
     serializer = EventSerializer(context,many=True)
     
-    return paginator.get_paginated_response(serializer.data)
-   
+    return paginator.get_paginated_response(serializer.data)   
 
 @api_view(['POST'])
 def event_create(request):

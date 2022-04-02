@@ -5,7 +5,8 @@ const store = createStore({
   state: {
      accessToken: localStorage.getItem('accessToken'),
      refreshToken: localStorage.getItem('refreshToken'),
-     APIData: ''
+     APIData: '',
+     username : localStorage.getItem('username')
   },
   mutations: {
     updateStorage (state, { access, refresh, username }) {
@@ -15,13 +16,17 @@ const store = createStore({
 
       localStorage.setItem('accessToken', access)
       localStorage.setItem('refreshToken', refresh)
+      localStorage.setItem('username', username)
+
     },
     destroyToken (state) {
       state.accessToken = null
       state.refreshToken = null
+      state.username = null
 
       localStorage.removeItem('accessToken')
       localStorage.removeItem('refreshToken')
+      localStorage.removeItem('username')
     }
   },
   getters: {

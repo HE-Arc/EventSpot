@@ -123,7 +123,7 @@ export default {
             }
             //else default image
             else {
-                imgPth = `<img class='miniImg' src="@/assets/default.jpg" alt="default"'/><br><br>`;
+                imgPth = `<img class='miniImg' src="${require("@/assets/default.jpg")}" alt="default"'/><br><br>`;
             }
 
             //add popup to marker

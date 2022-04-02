@@ -20,7 +20,7 @@
                         </div>
                         <div class="form-group mb-2">
                             <label for="date">Date</label>
-                            <input required v-model="form.date" type="datetime-local" :min="Date.now()" class="form-control" id="date" aria-describedby="date">
+                            <input required v-model="form.date" type="datetime-local" :min="this.now" class="form-control" id="date" aria-describedby="date">
                             <small  v-if="errors.date == null" class="form-text text-muted">Enter a date for your event</small>
                             <small v-else class="form-text text-danger ">{{errors.date[0]}}</small>
                         </div>
@@ -88,7 +88,7 @@ export default {
         icon: 'map-pin',
         markerColor: 'green',
       }),
-
+      now : new Date(Date.now()).toISOString().slice(0, -8),
       form: {
         title : '',
         description : '',
@@ -213,7 +213,7 @@ export default {
             formData.append(key, value);
            });
 
-           if(this.form.image == null)
+           if(this.form.image == null || typeof this.form.image === 'string')
             formData.delete('image');
 
           await this.requestApi(this.targetApi, formData,

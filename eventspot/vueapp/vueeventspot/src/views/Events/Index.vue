@@ -13,7 +13,7 @@
             </div>
             <MyPagination class="mt-6" :links="'events'" />
             <span v-if="this.loaded">
-                <IndexMap :events="APIData.results"></IndexMap>
+                <IndexMap :events="publicEvents"></IndexMap>
             </span>
         </main>
         <MyFooter></MyFooter>
@@ -47,15 +47,22 @@ export default {
     data() {
     return { 
         loaded : false, 
+        publicEvents : null
         }
     },
     computed: mapState(['APIData']),
         created () {
         getAPI.get('/events/', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
           .then(response => {
-            console.log('Post API has recieved data');
             this.$store.state.APIData = response.data;
-            console.log(this.$store.state.APIData);
+          })
+          .catch(err => {
+            console.log(err)
+          })
+
+        getAPI.get('/events/public', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+          .then(response => {
+            this.publicEvents = response.data;
             this.loaded=true;
           })
           .catch(err => {

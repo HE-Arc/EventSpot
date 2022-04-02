@@ -5,6 +5,7 @@ import store from './store.js'
 import { getAPI, getAPIAuth } from './axios-api'
 
 import "bootstrap/dist/css/bootstrap.min.css"
+import 'bootstrap/dist/js/bootstrap.min.js'
 import "bootstrap"
 
 import { library } from "@fortawesome/fontawesome-svg-core";

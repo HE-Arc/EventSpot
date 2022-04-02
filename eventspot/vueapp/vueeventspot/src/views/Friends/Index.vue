@@ -10,15 +10,17 @@
                     <div class="w-50 input-group-pers">
                         <div class="input-group">
                             <input v-model="form.username" required type="text" class="form-control" id="username" aria-describedby="username" placeholder="Enter username">
-                            <ul class="list-group" v-if="results.length > 0 && form.username">
-                                    <a v-for="result in results" :key="result.id" class="custom-a" href="#" @click="addValueToInput(result.username)">
+                            <button class="btn btn-success" type="submit">Send</button>
+                        </div>
+                    </div>
+                    <div class="w-50 input-group-pers">
+                        <ul class="list-group" v-if="results.length > 0 && form.username">
+                                    <a v-for="result in results" :key="result.id" class="text-decoration-none" href="#" @click="addValueToInput(result.username)">
                                   <li class="list-group-item list-group-item-action">
                                      {{result.username}}
                                   </li>
                                   </a>
                             </ul>
-                            <button class="btn btn-success" type="submit">Send</button>
-                        </div>
                     </div>
                 </div>
             </form>

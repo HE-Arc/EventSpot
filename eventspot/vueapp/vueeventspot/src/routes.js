@@ -11,22 +11,26 @@ import Logout from './views/Logout.vue'
 import Home from './views/Home.vue'
 
 import NotFoundPage from './components/NotFoundPage.vue'
-import UnauthorisedPage from './components/UnauthorisedPage.vue'
+import ForbiddenPage from './components/ForbiddenPage.vue'
 
 
 const router = createRouter({
     history: createWebHistory(),
     routes: [
         {
-            path: '/',
-            name: 'home',
-            component: Home
+        path: '/',
+        name: 'home',
+        component: Home,
+        meta: {
+            requiresLogin: false
+        } 
         },
         {
         path: '/events/:state?',
         name: 'events',
         component: Events,
         meta: {
+            requiresLogin: true
             },
         },
         { 
@@ -91,9 +95,9 @@ const router = createRouter({
             }
         },
         { 
-            path: '/401',
-            name: 'unauthorisedPage',
-            component: UnauthorisedPage 
+            path: '/403',
+            name: 'forbiddenPage',
+            component: ForbiddenPage 
         },
         { 
             path: '/:pathMatch(.*)*',

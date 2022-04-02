@@ -203,6 +203,7 @@ export default {
         onChange(event) {
             console.log(event.target.value);
             this.form.image = event.target.files[0]
+            console.log(typeof this.form.image);
         },
         async submitForm(){
           
@@ -213,8 +214,11 @@ export default {
             formData.append(key, value);
            });
 
-           if(this.form.image == null || typeof this.form.image === 'string')
-            formData.delete('image');
+           if(this.form.image == null || typeof this.form.image === 'string') {
+             formData.delete('image');
+           }
+           
+           console.log(formData);
 
           await this.requestApi(this.targetApi, formData,
           { headers: {

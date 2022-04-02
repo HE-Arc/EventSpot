@@ -60,12 +60,15 @@ export default {
     }
   },
   created () {
-    getAPI.get('/profile/', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+    if(this.$store.state.accessToken != null)
+    {
+      getAPI.get('/profile/', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
       .then(response => {
       this.username = response.data.username;
       this.profile_image = response.data.profile_image;
       console.log(response);
       })
+    }
   }
 };
 </script>

@@ -14,7 +14,7 @@ getAPI.interceptors.response.use(null, error => {
     let path = ''
     switch (error.response.status) {
       case 404: path = 'notFoundPage'; break;
-      case 401: path = 'unauthorisedPage'; break;
+      case 403: path = 'forbiddenPage'; break;
     }
     router.push({name : path});
     return Promise.reject(error);

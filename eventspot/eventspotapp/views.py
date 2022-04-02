@@ -93,14 +93,14 @@ def event_detail(request, id):
                                         | Q(user=request.user)).distinct()
 
     if event not in eventsAuthorize:
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
+        return Response(status=status.HTTP_403_FORBIDDEN)
         
     if request.method == 'GET':
         serializer = EventSerializer(event)
         return Response(serializer.data)
     elif request.method == 'PUT':
         if event.user != request.user:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            return Response(status=status.HTTP_403_FORBIDDEN)
         serializer = EventSerializer(event, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -108,7 +108,7 @@ def event_detail(request, id):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
         if event.user != request.user:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            return Response(status=status.HTTP_403_FORBIDDEN)
         event.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
       

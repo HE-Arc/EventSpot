@@ -6,11 +6,16 @@ from eventspotapp.models import Event, FriendList, FriendRequest, User, Profile
 from django.contrib.auth.models import User
 from rest_framework.response import Response
 
-
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = '__all__'
+        
 class UserSerializer(serializers.ModelSerializer):
+    profile = ProfileSerializer(read_only=True)
     class Meta:
         model = User
-        fields = ('id','username')
+        fields = ('id','username', 'profile')
         
 class BlacklistRefreshViewSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,8 +24,6 @@ class BlacklistRefreshViewSerializer(serializers.ModelSerializer):
                 
 class EventSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
-
-    
     class Meta:
         model = Event
         fields = ('id','title','description','user','date','longitude','lattitude','image','is_private')
@@ -142,9 +145,3 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
-        
-    
-class ProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Profile
-        fields = '__all__'

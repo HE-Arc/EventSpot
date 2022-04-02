@@ -4,9 +4,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
 
-
-# Create your models here.
-
 class Event (models.Model):
     user =  models.ForeignKey(User, on_delete=models.CASCADE,default="")
     title = models.CharField(max_length=50)
@@ -83,9 +80,8 @@ class FriendRequest(models.Model):
             if sender_friend_list:
                 sender_friend_list.add_friend(self.receiver)
                 self.save()
-
+        
 class Profile(models.Model):
-    
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_image = models.ImageField(upload_to='uploads/',blank =True)
     

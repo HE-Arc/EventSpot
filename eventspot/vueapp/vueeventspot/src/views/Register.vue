@@ -25,14 +25,14 @@
                 <input type="password" name="confirm" id="confirm" v-model="confirm" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="Password confirmation">
               </div>
               <div class="row mt-3">
-                <input type="submit" value="Submit" class="btn btn-primary rounded-pill">
+                <input type="submit" value="Submit" class="btn btn-primary">
               </div>
               <div v-if="incorrectAuth" class="mt-2">
                 <small id="error">{{incorrectAuth}}</small>
               </div>
             </form>
           </div>
-          <div class="row">
+          <div class="row mt-3">
             <p>Back to <router-link :to="{ name: 'login' }" exact>Login</router-link></p>
           </div>
         </div>

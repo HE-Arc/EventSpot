@@ -10,7 +10,6 @@ urlpatterns = [
     path('api-token-refresh/', TokenRefreshView.as_view()),
     path('api-token-logout/', views.BlacklistRefreshView.as_view(), name="logout"),
 
-  
     path('friends/create', views.send_friend_request, name='send_friend_request'),
     path('friends/accept', views.accept_friend_request, name='accept_friend_request'),
     path('friends/', views.friends_view, name='friends_view'),

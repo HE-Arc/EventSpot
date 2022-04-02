@@ -1,8 +1,8 @@
 <template>
     <div class="events">
-        <NavBar></NavBar>
+        <NavBar :key="componentKey"></NavBar>
         <main class="container-fluid mt-5">
-            <div class="row col-lg-4 col-md-7 col-sm-12 col-xs-12 m-auto d-flex text-center" id="main-container">
+            <div class="row col-xl-4 col-lg-5 col-md-7 col-sm-12 col-xs-12 m-auto d-flex text-center" id="main-container">
               <div class="col-12" id="login">
                 <div class="container-fluid">
                   <div id="img-container" class="row col-lg-6 col-12 mx-auto justify-content-center text-center mt-3">
@@ -10,7 +10,7 @@
                     <span v-if="profile_image"><img id="img-logo" width="120" height="120" alt="Profile image" :src="profile_image"></span>
                     <span v-else><img id="img-logo" width="120" height="120" alt="Profile image" src="../assets/default_profile.png"></span>
                   </div>
-                  <div class="row col-lg-6 col-12 mx-auto justify-content-center text-center">
+                  <div class="row col-12 mx-auto justify-content-center text-center">
                     <form v-on:submit.prevent="updateUser" class="px-2 mx-auto justify-content-center text-center">
                       <div class="form-group row mt-3">
                         <input @change="onChange($event)" class="form-control" type="file" id="formFile" accept="image/*">
@@ -23,7 +23,7 @@
                         <input type="email" name="emailusername" id="email" v-model="formUser.email" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-1 shadow-none mx-auto my-2 custom-input" placeholder="Email">
                       </div>
                       <div class="form-group row mt-3">
-                        <input type="submit" value="Update" class="btn btn-primary rounded-pill">
+                        <input type="submit" value="Update" class="btn btn-primary">
                       </div>
                       <div v-if="incorrectUser" class="mt-2">
                         <small class="text-danger">{{incorrectUser}}</small>
@@ -36,7 +36,7 @@
                   <div class="row mt-4">
                     <h3 class="mt-3">Change password</h3>
                   </div>
-                  <div class="row col-lg-6 col-12 mx-auto justify-content-center text-center">
+                  <div class="row col-12 mx-auto justify-content-center text-center">
                     <form v-on:submit.prevent="changePassword" class="px-2 mx-auto justify-content-center text-center">
                       <div class="form-group row">
                         <input type="password" name="password" id="pass" v-model="formPassword.password" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="New password">
@@ -44,13 +44,13 @@
                       <div class="form-group row">
                         <input type="password" name="confirm" id="confirm" v-model="formPassword.confirm" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="Confirmation">
                       </div>
-                      <div class="form-group row mt-3">
-                        <input type="submit" value="Change password" class="btn btn-primary rounded-pill">
+                      <div class="form-group row my-3">
+                        <input type="submit" value="Change password" class="btn btn-primary">
                       </div>
-                      <div v-if="incorrectPassword" class="mt-2">
+                      <div v-if="incorrectPassword" class="my-3">
                         <small class="text-danger">{{incorrectPassword}}</small>
                       </div>
-                      <div v-if="successPassword" class="mt-2">
+                      <div v-if="successPassword" class="my-3">
                         <small class="text-success">{{successPassword}}</small>
                       </div>
                     </form>
@@ -88,7 +88,7 @@ export default {
         incorrectUser: false,
         successUser: false,
         incorrectPassword: false,
-        successPassword: false
+        successPassword: false,
       }
     },
     components: {
@@ -102,16 +102,12 @@ export default {
             console.log('Post API has recieved data');
             this.$store.state.APIData = response.data;
 
-            console.log(response.data);
-
             this.formUser.username = this.$store.state.APIData.username;
             this.formUser.email = this.$store.state.APIData.email;
             this.id = this.$store.state.APIData.id;
             this.profile_image = this.$store.state.APIData.profile_image;
           })
           .catch(err => {
-            console.log(err)
-
             if (err.response.status === 401) {
                 this.$router.push({ name: 'logout' })
             }
@@ -142,17 +138,18 @@ export default {
 
         getAPI.put('/profiles/update/' + this.id + '/', formData, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
         .then(response => {
-          this.successUser = "profile updated successfully";
+          this.successUser = "Profile updated sucessfully"
 
           this.$store.state.APIData.username = response.data.username;
           this.$store.state.APIData.email = response.data.email;
           this.$store.state.APIData.profile_image = response.data.profile_image;
-
-          console.log(response.data.profile_image);
           
           this.formUser.username = this.$store.state.APIData.username;
           this.formUser.email = this.$store.state.APIData.email;
           this.profile_image = this.$store.state.APIData.profile_image
+
+          // force navbar to re-render
+          this.componentKey += 1;
         })
         .catch(err => {
           this.successUser = false;
@@ -245,7 +242,7 @@ body {
 }
 
 #img-container {
-  width: 160px;
+  width: 150px;
   height: 120px;
 }
 

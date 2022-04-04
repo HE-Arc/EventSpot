@@ -25,7 +25,7 @@
                             <small v-else class="form-text text-danger ">{{errors.date[0]}}</small>
                         </div>
                         <div class="form-group mb-2" >
-                            <img v-if="form.image" :src="'http://localhost:8000'+form.image" alt="img event" class="img-thumbnail" style="height:15vh;">
+                            <img v-if="APIData.image" :src="form.image" alt="img event" class="img-thumbnail" style="height:15vh;">
                             <input @change="onChange($event)" class="form-control" type="file" id="formFile" accept="image/*">
                             <small v-if="errors.image == null" for="formFile" class="form-text form-label">Import a picture for you event</small>
                             <small v-else class="form-text text-danger ">{{errors.image[0]}}</small>
@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { getAPI } from '../../axios-api.js'
+import { getAPI,baseURL } from '../../axios-api.js'
 import { mapState } from 'vuex'
 import NavBar from '../../components/NavBar.vue'
 import MyFooter from '../../components/Footer.vue'
@@ -121,7 +121,9 @@ export default {
         this.form.description = this.APIData.description;
         this.form.date = this.$moment(this.APIData.date).format('YYYY-MM-DDTHH:mm');
         this.form.is_private = this.APIData.is_private;
-        this.form.image = this.APIData.image;
+      
+
+        this.form.image = baseURL + this.APIData.image;
         this.form.lattitude = this.APIData.lattitude;
         this.form.longitude = this.APIData.longitude;
 

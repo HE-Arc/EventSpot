@@ -9,7 +9,7 @@
                 <a href="#" data-toggle="modal" data-target="#confirm-delete" @click="destroy()" class="btn btn-danger">Delete</a><br>
             </div>
             <small v-if="APIData.user != undefined">Author : {{APIData.user.username}}</small><br>
-            <strong>Date : {{this.$moment(APIData.date).format('YYYY-MM-DD HH:mm:ss')}}</strong>
+            <strong>Date : {{this.$moment(APIData.date).format('YYYY-MM-DD HH:mm')}}</strong>
             <img style="max-height: 33vh;" :src="this.img" class="mb-5 mp-5 img-responsive center-block d-block mx-auto"  alt="image event">
             <p class="text-justify">{{APIData.description}}</p>
         </main>
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { getAPI } from '../../axios-api.js'
+import { getAPI,baseURL } from '../../axios-api.js'
 import { mapState } from 'vuex'
 import NavBar from '../../components/NavBar.vue'
 import MyFooter from '../../components/Footer.vue'
@@ -61,7 +61,7 @@ export default {
 
             if(response.data.image != undefined)
             {
-                this.img = `http://localhost:8000${response.data.image}`;
+                this.img = baseURL + response.data.image;
             }
 
           })

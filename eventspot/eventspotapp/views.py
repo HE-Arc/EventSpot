@@ -11,6 +11,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.pagination import PageNumberPagination
 from collections import OrderedDict
 from django.db.models import Q
+from django.conf import settings #this imports also your specific settings.py
 
 class BlacklistRefreshView(generics.CreateAPIView):
     serializer_class = BlacklistRefreshViewSerializer
@@ -51,8 +52,13 @@ def public_event_list(request):
 
 @api_view(['GET'])
 def my_event_list(request):
-    """
-    Retrieve all events
+    """_summary_
+
+    Args:
+        request (_type_): _description_
+
+    Returns:
+        _type_: event
     """
     paginator = OneByOneItems()
     
@@ -165,7 +171,7 @@ def send_friend_request(request):
                     friend_requests = FriendRequest.objects.filter(sender=current_user, receiver=receiver)
                     for request in friend_requests:
                         if request:
-                            return Response({'message' : 'You already sent them a friend request.'},status=status.HTTP_409_CONFLICT)                            
+                            return Response({'message' : 'You already sent a friend request.'},status=status.HTTP_409_CONFLICT)                            
                     
                     friend_request = FriendRequest(sender=current_user, receiver=receiver)
                     friend_request.save()
@@ -254,8 +260,6 @@ class DetailProfileView(generics.RetrieveAPIView):
         profile = serializer.data
         
         image = profile[0].get('profile_image')
-        if image is not None:
-            image = 'http://localhost:8000' + image
         
         data = {
             'username': user.username,

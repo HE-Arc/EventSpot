@@ -9,18 +9,19 @@
                 <div class="card-box">
                     <div class="w-50 input-group-pers">
                         <div class="input-group">
-                            <input v-model="form.username" required type="text" class="form-control" id="username" aria-describedby="username" placeholder="Enter username">
-                            <button class="btn btn-success" type="submit">Send</button>
+                            <input v-model="form.username" required type="text" class="w-75 form-control" id="username" aria-describedby="username" placeholder="Enter username">
+                            <button class="w-25 btn btn-success" type="submit">Send</button>
                         </div>
                     </div>
                     <div class="w-50 input-group-pers">
-                        <ul class="list-group" v-if="results.length > 0 && form.username">
+                        <ul class="w-75 list-group" v-if="results.length > 0 && form.username">
                                     <a v-for="result in results" :key="result.id" class="text-decoration-none" href="#" @click="addValueToInput(result.username)">
                                   <li class="list-group-item list-group-item-action">
                                      {{result.username}}
                                   </li>
                                   </a>
                             </ul>
+                        <span class="w-25"></span>
                     </div>
                 </div>
             </form>
@@ -112,8 +113,11 @@ export default {
                     console.log(err)
                 })
         },
-        async searchMembers() {
-            await getAPI.get('/friends/search', { params: {username:this.form.username},headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+        searchMembers() {
+            if(this.form.username == '')
+                return;
+                
+            getAPI.get('/friends/search', { params: {username:this.form.username},headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
                 .then(response => {
                     this.results = response.data
                 })

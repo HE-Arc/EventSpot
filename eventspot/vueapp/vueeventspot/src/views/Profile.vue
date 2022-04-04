@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { getAPI } from '../axios-api.js'
+import { getAPI,baseURL } from '../axios-api.js'
 import { mapState } from 'vuex'
 import NavBar from '../components/NavBar.vue'
 import MyFooter from '../components/Footer.vue'
@@ -96,7 +96,7 @@ export default {
         MyFooter
     },
     computed: mapState(['APIData']),
-    created () {
+    created () {        
         getAPI.get('/profile/', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
           .then(response => {
             console.log('Post API has recieved data');
@@ -105,7 +105,7 @@ export default {
             this.formUser.username = this.$store.state.APIData.username;
             this.formUser.email = this.$store.state.APIData.email;
             this.id = this.$store.state.APIData.id;
-            this.profile_image = this.$store.state.APIData.profile_image;
+            this.profile_image = baseURL + this.$store.state.APIData.profile_image;
           })
           .catch(err => {
             if (err.response.status === 401) {
@@ -147,6 +147,8 @@ export default {
           this.formUser.username = this.$store.state.APIData.username;
           this.formUser.email = this.$store.state.APIData.email;
           this.profile_image = this.$store.state.APIData.profile_image
+
+          this.$store.state.username =  response.data.username;
 
           // force navbar to re-render
           this.componentKey += 1;

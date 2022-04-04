@@ -50,7 +50,7 @@
 
 
 <script>
-import { getAPI } from '../axios-api.js'
+import { getAPI,baseURL } from '../axios-api.js'
 export default {
   name: "NavBar",
   data () {
@@ -65,7 +65,7 @@ export default {
       getAPI.get('/profile/', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
       .then(response => {
       this.username = response.data.username;
-      this.profile_image = response.data.profile_image;
+      this.profile_image = baseURL + response.data.profile_image;
       console.log(response);
       })
     }

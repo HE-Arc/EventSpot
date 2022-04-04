@@ -1,12 +1,13 @@
 import axios from 'axios'
 import router from './routes.js'
 
+const baseURL = 'http://127.0.0.1:8000';
+const apiURL = baseURL + "/api";
+
 const getAPI = axios.create({
-    baseURL: 'http://127.0.0.1:8000',
+    baseURL: apiURL,
     timeout: 5000,
 });
-
-
 
 getAPI.interceptors.response.use(null, error => {
 
@@ -22,8 +23,8 @@ getAPI.interceptors.response.use(null, error => {
 
 
 const getAPIAuth = axios.create({
-    baseURL: 'http://127.0.0.1:8000',
+    baseURL: apiURL,
     timeout: 3000,
 })
 
-export { getAPI, getAPIAuth }
+export { getAPI, getAPIAuth, baseURL }

@@ -1,13 +1,15 @@
    <template>
     <div v-if="this.typeData == 'success'" class="alert alert-success row">
         <div class="col-6"><strong>Success!</strong> {{this.message}}</div>
-        <div v-on:click="close" class="col-6 "><button class="btn-close float-end" data-dismiss="alert" aria-label="close"></button></div>
+        <div v-on:click="close" class="col-6 "><button class="btn-close float-end"></button></div>
     </div>
-    <div v-else-if="this.typeData == 'danger'" class="alert alert-danger">
-        {{this.message}}
+    <div v-else-if="this.typeData == 'danger'" class="alert alert-danger row">
+        <div class="col-6"><strong>Error!</strong> {{this.message}}</div>
+        <div v-on:click="close" class="col-6 "><button class="btn-close float-end"></button></div>
     </div>
-    <div v-else-if="this.typeData == 'warning'" class="alert alert-warning">
-        {{this.message}}
+    <div v-else-if="this.typeData == 'warning'" class="alert alert-warning row">
+        <div class="col-6"><strong>Warning!</strong> {{this.message}}</div>
+        <div v-on:click="close" class="col-6 "><button class="btn-close float-end"></button></div>
     </div>
 </template>
 
@@ -25,6 +27,11 @@ export default {
          close(){
              this.typeData = null;
          },
-     }
+     },
+      watch: { 
+      	type: function(newVal, oldVal) { // watch it
+          this.typeData = this.type;
+        }
+      }
 }
 </script>

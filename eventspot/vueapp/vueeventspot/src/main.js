@@ -5,7 +5,6 @@ import store from './store.js'
 import { getAPI, getAPIAuth } from './axios-api'
 
 import "bootstrap/dist/css/bootstrap.min.css"
-import 'bootstrap/dist/js/bootstrap.min.js'
 import "bootstrap"
 
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -38,7 +37,7 @@ getAPI.interceptors.request.use(request => {
           refresh: store.state.refreshToken
       }
 
-      getAPIAuth.post('/api-token-refresh/', data)
+      getAPIAuth.post('/token-refresh/', data)
       .then(response => {
           store.state.accessToken = response.data.access;
       })

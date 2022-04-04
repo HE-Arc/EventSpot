@@ -3,7 +3,7 @@
     <div class="text-center card-box">
       <div class="member-card pt-2 pb-2">
         <div class="thumb-lg member-thumb mx-auto">
-          <img v-if="profileImage!=null" :src="`http://localhost:8000${profileImage}`" class="rounded-circle img-thumbnail" alt="profile-image">
+          <img v-if="profileImage!=null" :src="myImg" class="rounded-circle img-thumbnail" alt="profile-image">
           <img v-else src="@/assets/default_profile.png" class="rounded-circle img-thumbnail" alt="profile-image">
         </div>
         <div>
@@ -18,10 +18,15 @@
 </template>
 
 <script>
-import { getAPI } from '../axios-api';
+import { getAPI,baseURL } from '../axios-api';
 import VueSimpleAlert from "vue3-simple-alert"
 export default {
   props: ["username", "id", "pending", "profileImage"],
+  data(){
+    return {
+      myImg : baseURL + this.profileImage
+    }
+  },
   components: {
   },
   methods: {
@@ -96,7 +101,8 @@ export default {
     border: 1px solid #dee2e6;
     border-radius: .25rem;
     max-width: 100%;
-    height: auto;
+    height: 5em;
+    width: 100%;
 }
 .btn-rounded {
     border-radius: 2em;
@@ -105,4 +111,5 @@ export default {
 .text-muted {
     color: #98a6ad!important;
 }
+
 </style>

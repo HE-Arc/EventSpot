@@ -42,7 +42,7 @@ const store = createStore({
     },
     userLogin (context, usercredentials) {
       return new Promise((resolve, reject) => {
-        getAPI.post('/api-token/', {
+        getAPI.post('/token/', {
           username: usercredentials.username,
           password: usercredentials.password
         })

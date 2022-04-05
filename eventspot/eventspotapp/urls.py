@@ -1,11 +1,16 @@
-from django.urls import path
+from django.urls import path,include
 from . import views 
 from rest_framework_simplejwt.views import (TokenObtainPairView,TokenRefreshView)
 from django.views.generic import TemplateView
 from rest_framework.schemas import get_schema_view
+from rest_framework import routers
 
+
+router = routers.DefaultRouter()
+router.register(r'events', views.EventViewSet, basename='Event')
 
 urlpatterns = [
+    path('api/', include(router.urls)),
     path('api/token/', TokenObtainPairView.as_view()),
     path('api/token-refresh/', TokenRefreshView.as_view()),
     path('api/token-logout/', views.BlacklistRefreshView.as_view(), name="logout"),
@@ -22,12 +27,6 @@ urlpatterns = [
     path('api/profiles/update/<int:pk>/', views.UpdateProfileView.as_view(), name='updateProfile_view'),
     path('api/profiles/password/<int:pk>/', views.UpdatePasswordView.as_view(), name='updatePassword_view'),
   
-    path('api/events/create', views.event_create, name='events_create'),
-    path('api/events/public', views.public_event_list, name='events_list'),
-    path('api/events/', views.my_event_list, name='events_list'),
-    path('api/events/<id>', views.event_detail, name='events_detail'),
-    path('api/events/<id>/delete', views.event_detail, name='events_delete'),
-    path('api/events/<id>/update', views.event_detail, name='events_update'),
   
     path('api/schema/', get_schema_view(
         title="Event Service",

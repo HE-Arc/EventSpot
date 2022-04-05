@@ -28,7 +28,8 @@ class FriendList(models.Model):
     friends = models.ManyToManyField(User, blank=True, related_name="friends") 
     
     def __str__(self):
-        return self.friends[0].user.username
+        return self.user.username
+    #self.friends[0].user.username
     
     def add_friend(self, account): # user ? 
         """

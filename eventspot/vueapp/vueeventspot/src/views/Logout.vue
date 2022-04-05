@@ -10,7 +10,7 @@ export default {
   created () {
     this.$store.dispatch('userLogout')
     .then(() => {
-      getAPI.post('/token-logout/', this.$store.state.refreshToken)
+      getAPI.post('/token/logout/', this.$store.state.refreshToken)
       .then(() => { 
         this.$router.push({ name: 'login' })
       })

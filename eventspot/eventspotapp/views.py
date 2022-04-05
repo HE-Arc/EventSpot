@@ -1,27 +1,17 @@
 from django.http import HttpResponse, HttpResponseBadRequest
-from rest_framework import status
+from rest_framework import status, viewsets, mixins, generics
 from rest_framework.response import Response
-from rest_framework import generics
-from rest_framework import viewsets
-from . models import Event, FriendList, FriendRequest,Profile, User
+from . models import Event, FriendList, FriendRequest, Profile, User
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
-from . serializers import EventSerializer, CreateUserSerializer, UpdateUserSerializer, ChangePasswordSerializer, ProfileSerializer,BlacklistRefreshViewSerializer,FriendListSerializer, FriendRequestSerializer, UserSerializer
+from . serializers import EventSerializer, ProfileSerializer, BlacklistRefreshViewSerializer, FriendListSerializer, FriendRequestSerializer, UserSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.pagination import PageNumberPagination
 from collections import OrderedDict
 from django.db.models import Q
 from django.conf import settings #this imports also your specific settings.py
 from rest_framework.decorators import action
-
-
-class BlacklistRefreshView(generics.CreateAPIView):
-    serializer_class = BlacklistRefreshViewSerializer
-    def post(self, request):
-        token = RefreshToken(request.data.get('refresh'))
-        token.blacklist()
-        return Response("Success")
 
 class OneByOneItems(PageNumberPagination):
     page_size = 6
@@ -58,20 +48,26 @@ class EventViewSet(viewsets.ModelViewSet):
     
         return Response(serializer.data)
     
-    #def retrieve(self, request, pk=None):
+    def retrieve(self, request, pk=None):
         #ici faut autoriser plus pour le retrieve
         #attention faut aussi verifier que pk existe sinon error 404
         #comme ça
-        #friendsList = FriendList.objects.get(user=request.user)
-        #eventsAuthorize = Event.objects.all().filter(Q(user__id__in=friendsList.friends.all()) 
-        #                                    | Q(is_private=False) 
-        #                                        | Q(user=request.user)).distinct()
 
-        #if event not in eventsAuthorize:
-        #   return Response(status=status.HTTP_403_FORBIDDEN)
+        try:
+            event = Event.objects.get(id=pk)
+        except Event.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        friendsList = FriendList.objects.get(user=request.user)
+        eventsAuthorize = Event.objects.all().filter(Q(user__id__in=friendsList.friends.all()) 
+                                            | Q(is_private=False) 
+                                            | Q(user=request.user)).distinct()
+
+        if event not in eventsAuthorize:
+           return Response(status=status.HTTP_403_FORBIDDEN)
         
-        #serializer = EventSerializer(event)
-        #return Response(serializer.data)   
+        serializer = EventSerializer(event)
+        return Response(serializer.data)   
       
 @api_view(['GET'])
 def search_users(request):
@@ -197,18 +193,40 @@ def decline_friend_request(request,id):
             return Response({'message' : 'User not found.'}, status=status.HTTP_400_BAD_REQUEST) 
     except User.DoesNotExist:
         return Response({'message' : 'User not found.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class ProfileViewSet(mixins.CreateModelMixin,
+                     mixins.UpdateModelMixin,
+                     viewsets.GenericViewSet):
+
+    model = Profile
+
+    def get_queryset(self):
+        if self.action == 'create':
+            user = self.request.user
+            return Profile.objects.filter(user=user)
+        else:
+            return User.objects.all()
     
-class CreateProfileView(generics.CreateAPIView):
-    serializer_class = CreateUserSerializer
-    
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-    
-class DetailProfileView(generics.RetrieveAPIView):
-    permission_classes = (IsAuthenticated,)
-    serializer_class = ProfileSerializer
-    
-    def get(self, request, *args, **kwargs):       
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return UserSerializer
+        if self.action == 'partial_update':
+            return UserSerializer
+
+        # default
+        return ProfileSerializer
+
+    def get_permissions(self):
+        if self.action == 'create':
+            permission_classes = []
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
+  
+    @action(detail=False)
+    def myprofile(self, request):
         user = request.user
         queryset = Profile.objects.filter(user_id=user.id)
         serializer = ProfileSerializer(queryset, many=True)
@@ -224,19 +242,12 @@ class DetailProfileView(generics.RetrieveAPIView):
         }
         
         return Response(data)
-    
-class UpdateProfileView(generics.UpdateAPIView):
-    permission_classes = (IsAuthenticated,)
-    serializer_class = UpdateUserSerializer
-    queryset = User.objects.all()
-    
-    def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
-    
-class UpdatePasswordView(generics.UpdateAPIView):
-    permission_classes = (IsAuthenticated,)
-    serializer_class = ChangePasswordSerializer
-    queryset = User.objects.all()
-    
-    def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
+
+
+# This view must inherit from CreateAPIView otherwise CSRF abort
+class BlacklistRefreshView(generics.CreateAPIView):
+    serializer_class = BlacklistRefreshViewSerializer
+    def post(self, request):
+        token = RefreshToken(request.data.get('refresh'))
+        token.blacklist()
+        return Response("Success")

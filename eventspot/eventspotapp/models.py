@@ -88,7 +88,7 @@ class Profile(models.Model):
     profile_image = models.ImageField(upload_to='uploads/',blank =True)
 
 
-
+### Receivers
     
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

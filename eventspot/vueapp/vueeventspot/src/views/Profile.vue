@@ -97,7 +97,7 @@ export default {
     },
     computed: mapState(['APIData']),
     created () {        
-        getAPI.get('/profile/', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+        getAPI.get('/profiles/myprofile/', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
           .then(response => {
             console.log('Post API has recieved data');
             this.$store.state.APIData = response.data;
@@ -105,7 +105,9 @@ export default {
             this.formUser.username = this.$store.state.APIData.username;
             this.formUser.email = this.$store.state.APIData.email;
             this.id = this.$store.state.APIData.id;
-            this.profile_image = baseURL + this.$store.state.APIData.profile_image;
+
+            if(this.$store.state.APIData.profile_image)
+              this.profile_image = baseURL + this.$store.state.APIData.profile_image;
           })
           .catch(err => {
             if (err.response.status === 401) {
@@ -136,7 +138,7 @@ export default {
           formData.append(key, value);
         });
 
-        getAPI.put('/profiles/update/' + this.id + '/', formData, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+        getAPI.patch('/profiles/' + this.id + '/', formData, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
         .then(response => {
           this.successUser = "Profile updated sucessfully"
 
@@ -197,7 +199,7 @@ export default {
           formData.append(key, value);
         });
 
-        getAPI.put('/profiles/password/' + this.id + '/', formData, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+        getAPI.patch('/profiles/' + this.id + '/', formData, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
         .then(
           this.successPassword = "password updated successfully"
         )

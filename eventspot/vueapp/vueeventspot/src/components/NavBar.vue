@@ -62,11 +62,11 @@ export default {
   created () {
     if(this.$store.state.accessToken != null)
     {
-      getAPI.get('/profile/', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+      getAPI.get('/profiles/myprofile/', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
       .then(response => {
-      this.username = response.data.username;
-      this.profile_image = baseURL + response.data.profile_image;
-      console.log(response);
+        this.username = response.data.username;
+        if(response.data.profile_image)
+          this.profile_image = baseURL + response.data.profile_image;
       })
     }
   }

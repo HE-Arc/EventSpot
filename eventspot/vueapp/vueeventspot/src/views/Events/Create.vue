@@ -75,7 +75,7 @@ export default {
     data() {
     return {
       requestApi : getAPI.post, //method ref
-      targetApi : '/events/create',
+      targetApi : '/events/',
       pageTitle : 'Create a new event',
       map: null,
       homeMarker: null,
@@ -128,7 +128,7 @@ export default {
         this.form.longitude = this.APIData.longitude;
 
         this.requestApi = getAPI.put;
-        this.targetApi = `events/${this.APIData.id}/update`;
+        this.targetApi = `events/${this.APIData.id}/`;
 
         this.map.setView([this.form.lattitude,this.form.longitude], 5);
         this.clickMarker = L.marker([this.form.lattitude,this.form.longitude], {

@@ -14,6 +14,7 @@ export default {
       .then(() => { 
         this.$router.push({ name: 'login' })
       })
+      .catch()
     })
   }
 }

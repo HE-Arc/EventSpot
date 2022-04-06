@@ -32,7 +32,7 @@ export default {
   methods: {
     remove(id){
       VueSimpleAlert.confirm("Are you sure you want to remove this friend ?").then(() => {
-        getAPI.delete('/friends/' + id + '/delete', {headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+        getAPI.delete(`/friends/${id}/`, {headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
             .then(response => {
               console.log(response)
               this.$emit("messageUpdate", 'Successfully removed that friend.')
@@ -49,7 +49,7 @@ export default {
     },
     decline(id){
       VueSimpleAlert.confirm("Are you sure you want to decline the friend request ?").then(() => {
-        getAPI.delete('/friends/' + id + '/decline', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+        getAPI.delete(`/friends/${id}/decline`, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
             .then(response => {
               console.log(response)
               this.$emit("messageUpdate", 'Friend request declined.')
@@ -67,7 +67,7 @@ export default {
     accept(id){
       let formData = new FormData()
       formData.append('id',id)
-      getAPI.post('/friends/accept', formData, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+      getAPI.post('/friends/accept/', formData, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
           .then(response => {
             console.log(response)
             this.$emit("messageUpdate", response.data['message'])

@@ -1,10 +1,9 @@
 <template>
   <header>
     <nav class="navbar navbar-expand-md navbar-light" id="navbar">
-      <router-link class="ms-3 me-2 d-none d-md-inline-block" :to="{ name: 'events' }" exact>
+      <router-link class="ms-3 me-2 d-none d-md-inline-block" :to="{ name: 'home' }" exact>
         <img id="img-logo" alt="EventSpot Logo" width="50" height="50" src="../assets/mylogo.png">
       </router-link>
-      <a class="navbar-brand ms-2" href="/">EventSpot</a>
 
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggle">
         <span class="navbar-toggler-icon text-primary"></span>

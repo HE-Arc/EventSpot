@@ -1,7 +1,7 @@
 <template>
     <div class="EventsShow">
         <NavBar></NavBar>
-        <main class="container">
+        <main v-if="APIData.title != null" class="container">
             <FlashMessage class="mt-5" v-if="this.$route.params.state == 'success'" :type="'success'" :message="'Operation done with success!'"></FlashMessage>
             <h1>{{APIData.title}}</h1><br>
             <div v-if="APIData.user.username == this.$store.state.username" class="form-group mb-3">

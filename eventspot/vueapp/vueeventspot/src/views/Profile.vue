@@ -138,8 +138,9 @@ export default {
           formData.append(key, value);
         });
 
-        getAPI.patch('/profiles/' + this.id + '/', formData, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+        getAPI.patch(`/profiles/${this.id}/`, formData, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
         .then(response => {
+          this.incorrectUser = false;
           this.successUser = "Profile updated sucessfully"
 
           this.$store.state.APIData.username = response.data.username;
@@ -159,18 +160,13 @@ export default {
           this.successUser = false;
 
           if(err.response.data['email']) {
-            this.incorrectUser = err.response.data['email']['email'];
-            return -1;
+            this.incorrectUser = err.response.data['email'][0];
           }
-
-          if(err.response.data['username']) {
-            this.incorrectUser = err.response.data['username']['username'];
-            return -1;
+          else if(err.response.data['username']) {
+            this.incorrectUser = err.response.data['username'][0];
           }
-
-          if(err.response.data['authorize']) {
+          else if(err.response.data['authorize']) {
             this.incorrectUser = err.response.data['authorize'][0];
-            return -1;
           }
 
         })
@@ -180,17 +176,12 @@ export default {
 
         if(!this.formPassword.password) {
           this.incorrectPassword = "password is empty";
-          return 0;
         }
-
-        if(!this.formPassword.confirm) {
+        else if(!this.formPassword.confirm) {
           this.incorrectPassword = "password confirmation is empty";
-          return 0;
         }
-
-        if(this.formPassword.password != this.formPassword.confirm) {
+        else if(this.formPassword.password != this.formPassword.confirm) {
           this.incorrectPassword = "password confirmation does not match";
-          return 0;
         }
 
         let formData = new FormData();
@@ -200,20 +191,20 @@ export default {
         });
 
         getAPI.patch('/profiles/' + this.id + '/', formData, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
-        .then(
-          this.successPassword = "password updated successfully"
+        .then(()=>
+          {
+            this.incorrectPassword = false;
+            this.successPassword = "password updated successfully";
+          }
         )
         .catch(err => {
           this.successPassword = false;
 
           if(err.response.data['password']) {
-            this.incorrectAuth = err.response.data['password'][0];
-            return -1;
+            this.incorrectPassword = err.response.data['password'][0];
           }
-
-          if(err.response.data['authorize']) {
-            this.incorrectAuth = err.response.data['authorize'][0];
-            return -1;
+          else if(err.response.data['authorize']) {
+            this.incorrectPassword = err.response.data['authorize'][0];
           }
         })
 

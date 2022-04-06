@@ -17,7 +17,7 @@ export default {
     props:['event'],
     data(){
         return {
-        myImg : baseURL + this.event.image
+        myImg : this.event.image
         }
     },
 }

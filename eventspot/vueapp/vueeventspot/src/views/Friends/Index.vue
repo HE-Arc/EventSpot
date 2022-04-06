@@ -95,7 +95,7 @@ export default {
             let formData = new FormData()
             formData.append('username', this.form.username)
 
-            getAPI.post('/friends/create', formData, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+            getAPI.post('/friends/', formData, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
                 .then(response => {
                     console.log(response)
                     if(response.status == 201)

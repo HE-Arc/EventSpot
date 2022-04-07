@@ -1,17 +1,16 @@
 <template>
   <header>
     <nav class="navbar navbar-expand-md navbar-light" id="navbar">
-      <router-link class="mr-4 d-none d-md-inline-block" :to="{ name: 'events' }" exact>
+      <router-link class="ms-3 me-2 d-none d-md-inline-block" :to="{ name: 'home' }" exact>
         <img id="img-logo" alt="EventSpot Logo" width="50" height="50" src="../assets/mylogo.png">
       </router-link>
-      <a class="navbar-brand" href="/">EventSpot</a>
 
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggle">
         <span class="navbar-toggler-icon text-primary"></span>
       </button>
 
       <div class="collapse navbar-collapse" id="navbarToggle">
-        <ul class="navbar-nav">
+        <ul class="navbar-nav ms-2">
           <li v-show="username" class="nav-item">
             <router-link class="nav-link text-dark" active-class="active" :to="{ name: 'events' }" exact>Events</router-link>
           </li>
@@ -19,7 +18,7 @@
             <router-link class="nav-link text-dark" active-class="active" :to="{ name: 'friends' }" exact>Friends</router-link>
           </li>
         </ul>
-        <ul v-if="username" class="navbar-nav ml-auto">
+        <ul v-if="username" class="navbar-nav ms-2 ms-md-auto me-3">
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" data-bs-toggle="dropdown" aria-expanded="true">
             {{username}}
@@ -29,7 +28,7 @@
               <router-link class="dropdown-item dropdown-link" :to="{ name: 'logout' }" exact>Logout</router-link>
             </div>
           </li>
-          <li class="nav-item ml-3 d-none d-md-inline-block">
+          <li class="nav-item ms-1 d-none d-md-inline-block">
             <router-link :to="{ name: 'profilePage' }" exact>
               <div id="img-profil-container">
                 <img v-if="profile_image" id="img-profil" width="40" height="40" alt="Profile image" :src="profile_image">
@@ -38,7 +37,7 @@
             </router-link>
           </li>
         </ul>
-        <ul v-else class="navbar-nav ml-auto">
+        <ul v-else class="navbar-nav ms-auto me-3">
           <li class="nav-item">
             <router-link class="nav-link text-dark" :to="{ name: 'login' }">Login</router-link>
           </li>
@@ -50,7 +49,7 @@
 
 
 <script>
-import { getAPI } from '../axios-api.js'
+import { getAPI,baseURL } from '../axios-api.js'
 export default {
   name: "NavBar",
   data () {
@@ -60,12 +59,20 @@ export default {
     }
   },
   created () {
-    getAPI.get('/profile/', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+    //Only if we are logged, get info profile
+    if(this.$store.state.accessToken != null)
+    {
+      getAPI.get('/profiles/myprofile/', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
       .then(response => {
-      this.username = response.data.username;
-      this.profile_image = response.data.profile_image;
-      console.log(response);
+        this.username = response.data.username;
+        if(response.data.profile_image)
+          this.profile_image = baseURL + response.data.profile_image;
+      }).catch(err => {
+        if (err.response.status === "401") {
+          this.$router.push({name : 'logout'});
+        }
       })
+    }
   }
 };
 </script>

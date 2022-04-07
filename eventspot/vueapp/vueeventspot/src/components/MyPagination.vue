@@ -29,14 +29,16 @@ export default {
     },
     props: ['links'],
     methods: {
+      /**
+       * Call next page
+       */
       clickCallback: function (pageNum) {
         getAPI.get(`${this.links}?page=${pageNum}`, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
           .then(response => {
-            console.log('Post API has recieved data')
             this.$store.state.APIData = response.data
           })
-          .catch(err => {
-            console.log(err)
+          .catch(() => {
+            //nothing
           })
       },
     }

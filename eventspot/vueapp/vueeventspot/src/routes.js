@@ -8,16 +8,29 @@ import Login from './views/Login.vue'
 import Register from './views/Register.vue'
 import Profile from './views/Profile.vue'
 import Logout from './views/Logout.vue'
+import Home from './views/Home.vue'
+
 import NotFoundPage from './components/NotFoundPage.vue'
+import ForbiddenPage from './components/ForbiddenPage.vue'
+
 
 const router = createRouter({
     history: createWebHistory(),
     routes: [
         {
+        path: '/',
+        name: 'home',
+        component: Home,
+        meta: {
+            requiresLogin: false
+        } 
+        },
+        {
         path: '/events/:state?',
         name: 'events',
         component: Events,
         meta: {
+            requiresLogin: true
             },
         },
         { 
@@ -47,7 +60,7 @@ const router = createRouter({
         },
 
         {
-        path: '/friends',
+        path: '/friends/:state?',
         name: 'friends',
         component: Friends,
         meta: {
@@ -74,12 +87,17 @@ const router = createRouter({
         },
 
         {
-        path: '/profile',
+        path: '/profile:state?',
         name: 'profilePage',
         component: Profile,
         meta: {
                 requiresLogin: true
             }
+        },
+        { 
+            path: '/403',
+            name: 'forbiddenPage',
+            component: ForbiddenPage 
         },
         { 
             path: '/:pathMatch(.*)*',

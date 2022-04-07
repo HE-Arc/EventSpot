@@ -2,9 +2,8 @@
     <div class="events">
         <NavBar></NavBar>
         <main class="container">
+            <FlashMessage class="mt-5" v-if="this.$route.params.state == 'success'" :type="'success'" :message="'Operation done with success!'"></FlashMessage>
             <h1 class="mb-3">Events list</h1>
-            <p v-if="this.$route.params.state == 'success'">SUCCESS</p>
- 
             <div class="mb-4">
                 <h2>My events</h2>
                 <router-link class="btn btn-primary" :to="{ name: 'events.create'}">Create an event</router-link>
@@ -13,7 +12,9 @@
                 </div><br>
             </div>
             <MyPagination class="mt-6" :links="'events'" />
-           <!-- <IndexMap :events="APIData.results"></IndexMap>-->
+            <span v-if="this.loaded">
+                <IndexMap :events="publicEvents"></IndexMap>
+            </span>
         </main>
         <MyFooter></MyFooter>
     </div>
@@ -29,8 +30,8 @@ import NavBar from '../../components/NavBar.vue'
 
 
 import CardEvent from '../../components/CardEvent.vue'
-//import IndexMap from '../../components/IndexMap.vue'
-
+import IndexMap from '../../components/IndexMap.vue'
+import FlashMessage from '../../components/FlashMessage.vue'
 import MyPagination from '../../components/MyPagination.vue'
 
 
@@ -41,18 +42,31 @@ export default {
         MyFooter,
         CardEvent,
         MyPagination,
-       // IndexMap
+        IndexMap,
+        FlashMessage
+    },
+    data() {
+      return { 
+          loaded : false, 
+          publicEvents : null
+          }
     },
     computed: mapState(['APIData']),
-     created () {
-         getAPI.get('/events/', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+        created () {
+        //find my events
+        getAPI.get('/events/', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
           .then(response => {
-            console.log('Post API has recieved data')
-            this.$store.state.APIData = response.data
-            console.log(this.$store.state.APIData)
+            this.$store.state.APIData = response.data;
           })
-          .catch(err => {
-            console.log(err)
+          .catch(() => {
+          })
+        //find public events
+        getAPI.get('/events/public', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+          .then(response => {
+            this.publicEvents = response.data;
+            this.loaded=true;
+          })
+          .catch(() => {
           })
     }
 }

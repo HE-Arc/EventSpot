@@ -2,7 +2,7 @@
     <div class="col-md-4">
         <router-link class="card myCard" :to="{ name: 'events.show', params: {id: event.id } }">
             <div class="card-body">
-                <img v-if="event.image" class="myImg  img-responsive" :src="`http://localhost:8000${event.image}`" >
+                <img v-if="event.image" class="myImg  img-responsive" :src="myImg" >
                 <img v-else class="myImg  img-responsive" src="@/assets/default.jpg" alt="default" >
                 <h3 class="card-title">{{ event.title }}</h3>
             </div>
@@ -11,9 +11,17 @@
 </template>
 
 <script>
+import { baseURL } from '../axios-api';
+
 export default {
-    props:['event']
+    props:['event'],
+    data(){
+        return {
+        myImg : this.event.image
+        }
+    },
 }
+
 </script>
 
 <style scoped>

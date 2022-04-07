@@ -177,10 +177,11 @@ class FriendViewSet(viewsets.ModelViewSet):
     @action(detail=False)
     def search(self, request):
         """
-        Search 5 first user starting with the username received in the request
+        Search 5 first user 
+        ing with the username received in the request
         """
         username = request.GET.get('username')
-        users = UserSerializer(User.objects.filter(username__startswith=username).order_by('username')[:5], many=True).data
+        users = UserSerializer(User.objects.filter(username__istartswith=username).order_by('username')[:5], many=True).data
         return Response(users)
 
     @action(detail=True, methods=['delete'])

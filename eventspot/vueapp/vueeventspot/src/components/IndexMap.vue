@@ -15,8 +15,8 @@
 <script>
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import { baseURL } from '../axios-api';
 
-// eslint-disable-next-line no-unused-vars
 import LeafletSearch from "leaflet-search";
 import 'leaflet.awesome-markers';
 L.AwesomeMarkers.Icon.prototype.options.prefix = 'fa';
@@ -122,7 +122,7 @@ export default {
             
             //add image in picture if exist
             if (event.image != null) {
-                imgPth = `<img class='miniImg' src="http://localhost:8000${event.image}" alt="${event.title}"'/><br><br>`;
+                imgPth = `<img class='miniImg' src="${baseURL}${event.image}" alt="${event.title}"'/><br><br>`;
             }
             //else default image
             else {

@@ -30,7 +30,7 @@ namespace :python do
 	    execute "python3.8 -m venv #{venv_path}"
             execute "source #{venv_path}/bin/activate"
 	    execute "#{venv_path}/bin/pip install -r #{release_path}/requirements.txt"
-		# execute "py #{release_path}/eventspot/manage.py migrate"
+	    execute "py #{release_path}/eventspot/manage.py migrate"
 		# execute "py #{release_path}/eventspot/manage.py runserver"
         end
     end

@@ -13,10 +13,10 @@
           <div class="row">
             <form v-on:submit.prevent="login" class="form-group px-2">
               <div class="row">
-                <input type="text" name="username" id="user" v-model="username" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="Username">
+                <input type="text" name="username" id="user" v-model="username" required class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="Username">
               </div>
               <div class="row">
-                <input type="password" name="password" id="pass" v-model="password" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="Password">
+                <input type="password" name="password" id="pass" v-model="password" required class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="Password">
               </div>
               <div class="row mt-3">
                 <input type="submit" value="Submit" class="btn btn-primary">
@@ -55,8 +55,7 @@
         .then(() => {
           this.$router.push({ name: 'events' })
         })
-        .catch(err => {
-          console.log(err)
+        .catch(() => {
           this.incorrectAuth = true
         })
         }
@@ -76,9 +75,11 @@ body {
 }
 
 #logo {
-  background-color: #CECECE;
+  background-color: #ffffff!important;
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
+  border-top:1px solid #ccc;
+  border-right:1px solid rgb(235, 235, 235);
 }
 
 #img-logo {

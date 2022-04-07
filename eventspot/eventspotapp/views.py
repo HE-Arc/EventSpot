@@ -1,19 +1,22 @@
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponseBadRequest
 from rest_framework import status, viewsets, mixins, generics
 from rest_framework.response import Response
 from . models import Event, FriendList, FriendRequest, Profile, User
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
 from . serializers import EventSerializer, ProfileSerializer, BlacklistRefreshViewSerializer, FriendListSerializer, FriendRequestSerializer, UserSerializer,ProfileUserSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.pagination import PageNumberPagination
 from collections import OrderedDict
 from django.db.models import Q
-from django.conf import settings #this imports also your specific settings.py
 from rest_framework.decorators import action
 
 class OneByOneItems(PageNumberPagination):
+    """
+    Custum pagination
+    """
+    
+    # 6 items by page
     page_size = 6
 
     def get_paginated_response(self, data):
@@ -27,26 +30,25 @@ class OneByOneItems(PageNumberPagination):
          ]))
 
 class EventViewSet(viewsets.ModelViewSet):  
-    """_summary_
-
-    Args:
-        viewsets (_type_): _description_
-
-    Returns:
-        _type_: _description_
-    """
     model = Event
     serializer_class = EventSerializer
     pagination_class = OneByOneItems
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated] # only if the user is authenticated
     
     
     def get_queryset(self):
+        """
+        Working only on our events
+        """
         user = self.request.user
         return Event.objects.filter(user=user)
     
     @action(detail=False)
     def public(self, request):
+        """
+        Get public events
+        A public event is our event, our friends event and public events 
+        """
         friendsList = FriendList.objects.get(user=request.user)
         events = Event.objects.all().filter(Q(user__id__in=friendsList.friends.all()) 
                                         | Q(is_private=False) 
@@ -57,35 +59,50 @@ class EventViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
     
     def perform_create(self, serializer):
+        """
+        Assign the current event when creating an event
+        """
         serializer.save(user=self.request.user)
     
     def retrieve(self, request, pk=None):
+        """
+        Retrieve a public event
+        """
         try:
             event = Event.objects.get(id=pk)
         except Event.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_404_NOT_FOUND) # Event not found
 
+        # Retrieve our friend
         friendsList = FriendList.objects.get(user=request.user)
+        
+        # Get all public events
         eventsAuthorize = Event.objects.all().filter(Q(user__id__in=friendsList.friends.all()) 
                                             | Q(is_private=False) 
                                             | Q(user=request.user)).distinct()
 
         if event not in eventsAuthorize:
-           return Response(status=status.HTTP_403_FORBIDDEN)
+           return Response(status=status.HTTP_403_FORBIDDEN) # Forbidden if the event is not in public event
         
         serializer = EventSerializer(event)
+        
         return Response(serializer.data)   
 
 class FriendViewSet(viewsets.ModelViewSet):  
     permission_classes = [IsAuthenticated]
     
     def list(self,request):
+        """
+        Get all friends and friend request of the current user
+        """
         try:
             current_user = request.user
             receiver = User.objects.get(id=current_user.id)
             try:
                 friends = FriendListSerializer(FriendList.objects.all().filter(user=current_user), many=True).data
                 friends_requests = FriendRequestSerializer(FriendRequest.objects.filter(receiver=receiver), many=True).data
+                
+                # Join data to get friends and friend request on 1 time
                 response_data = {}
                 response_data['friends'] = friends
                 response_data['friends_requests'] = friends_requests
@@ -99,55 +116,57 @@ class FriendViewSet(viewsets.ModelViewSet):
         
     def create(self,request):
         """
-        send friend request
+        Create a friend request
         """
+        
+        # Get the current user
         current_user = request.user
-        try:
+        try:    # If the current user and the new friend exist 
             username_receiver = request.data['username']
-            try:
-                receiver = User.objects.get(username=username_receiver)
-                friend_list = FriendList.objects.get(user=current_user)
-                if receiver == current_user:
-                    return Response({'message' : 'You cannot add yourself.'}, status=status.HTTP_409_CONFLICT)
-                if not friend_list.is_friend(receiver):
-                    try:
-                        # Test si l'utilisateur que l'on veut ajouté n'est pas déjà dans notre liste friend request                  
-                        my_friend_requests = FriendRequest.objects.filter(receiver=current_user, sender=receiver)
-                        for my_friend_request in my_friend_requests:
-                            if my_friend_request:
-                                return Response({'message' : 'A friend request has already been sent.'},status=status.HTTP_409_CONFLICT) 
-                        
-                        # Test si l'utilisateur que l'on veut ajouté a pas déjà reçu une friend request
-                        friend_requests = FriendRequest.objects.filter(sender=current_user, receiver=receiver)
-                        for request in friend_requests:
-                            if request:
-                                return Response({'message' : 'You already sent a friend request.'},status=status.HTTP_409_CONFLICT)                            
-                        
-                        friend_request = FriendRequest(sender=current_user, receiver=receiver)
-                        friend_request.save()
-                        return Response({'message' : 'Friend request sent.'},status=status.HTTP_201_CREATED)
-                    except FriendRequest.DoesNotExist:
-                        friend_request = FriendRequest(sender=current_user, receiver=receiver)
-                        friend_request.save()   
-                        return Response({'message' : 'Friend request sent.'},status=status.HTTP_201_CREATED)
-                else:
-                    return Response({'message' : 'You are already friend.'}, status=status.HTTP_409_CONFLICT)
-            except User.DoesNotExist:
-                return Response({'message' : 'User not found.'}, status=status.HTTP_400_BAD_REQUEST)
-        except KeyError:
+            receiver = User.objects.get(username=username_receiver)
+            friend_list = FriendList.objects.get(user=current_user)
+            
+            # if the current user is the new user
+            if receiver == current_user:
+                return Response({'message' : 'You cannot add yourself.'}, status=status.HTTP_409_CONFLICT)
+            
+            # if the new user is not already in our friend list request
+            if not friend_list.is_friend(receiver):
+                
+                # if this friend is already in my friend request
+                my_friend_requests = FriendRequest.objects.filter(receiver=current_user, sender=receiver)
+                for my_friend_request in my_friend_requests:
+                    if my_friend_request:
+                        return Response({'message' : 'A friend request has already been sent.'},status=status.HTTP_409_CONFLICT) 
+                
+                # if this friend has already got my friend request
+                friend_requests = FriendRequest.objects.filter(sender=current_user, receiver=receiver)
+                for request in friend_requests:
+                    if request:
+                        return Response({'message' : 'You already sent a friend request.'},status=status.HTTP_409_CONFLICT)                            
+                
+                # no conflict so we create the friend request
+                friend_request = FriendRequest(sender=current_user, receiver=receiver)
+                friend_request.save()
+                return Response({'message' : 'Friend request sent.'},status=status.HTTP_201_CREATED)
+            else:
+                return Response({'message' : 'You are already friend.'}, status=status.HTTP_409_CONFLICT)
+        except (KeyError, User.DoesNotExist) as e:
             return Response({'message' : 'User not found.'}, status=status.HTTP_400_BAD_REQUEST)
     
     
     def destroy(self,request,pk=None):
         """
-        Remove friend
+        Remove a friend
         """
         current_user = request.user
         try:
             user_to_remove = User.objects.get(id=pk)
             friend_list = FriendList.objects.get(user=current_user)
-            if friend_list.is_friend(user_to_remove): # check if friend with the removee
-                friend_list.unfriend(user_to_remove) # call method in model for remove friend of friend list
+            
+            # check if we are friend with the user to remove
+            if friend_list.is_friend(user_to_remove): 
+                friend_list.unfriend(user_to_remove)
                 return Response({'message' : 'Successfully removed that friend.'}, status=status.HTTP_204_NO_CONTENT)
             else:
                 return Response({'message' : 'User not found.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -157,6 +176,9 @@ class FriendViewSet(viewsets.ModelViewSet):
             
     @action(detail=False)
     def search(self, request):
+        """
+        Search 5 first user starting with the username received in the request
+        """
         username = request.GET.get('username')
         users = UserSerializer(User.objects.filter(username__startswith=username).order_by('username')[:5], many=True).data
         return Response(users)
@@ -164,12 +186,14 @@ class FriendViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['delete'])
     def decline(self, request,pk=None):
         """
-        Decline friend request
+        Decline a friend request
         """
         current_user = request.user
         try:  
             sender = User.objects.get(id=pk)
             friend_request = FriendRequest.objects.filter(sender=sender, receiver=current_user).first()
+            
+            # Check if the friend request exist
             if friend_request:
                 friend_request.delete()
                 return Response({'message' : 'Friend request declined.'},status=status.HTTP_204_NO_CONTENT)   
@@ -182,23 +206,22 @@ class FriendViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'])
     def accept(self, request):
         """
-        accept friend request
+        Accept a friend request
         """
         current_user = request.user
-        try: # Test si l'id a été envoyé
+        try:
             sender_id = request.data['id']
-            try: # Test si l'utilisateur est existant
-                sender = User.objects.get(id=sender_id)
-                friend_request = FriendRequest.objects.filter(sender=sender, receiver=current_user).first()
-                if friend_request: # Test si c'est le bon utilisateur qui a envoyé la demande
-                    friend_request.accept()
-                    friend_request.delete()
-                    return Response({'message' : 'Friend request accepted.'},status.HTTP_201_CREATED)
-                else:
-                    return Response({'message' : 'Something went wrong.'},status.HTTP_409_CONFLICT) 
-            except User.DoesNotExist:
-                return Response({'message' : 'User not found.'}, status=status.HTTP_400_BAD_REQUEST)
-        except KeyError: 
+            sender = User.objects.get(id=sender_id)
+            friend_request = FriendRequest.objects.filter(sender=sender, receiver=current_user).first()
+            
+            # accept only if a request has been sent
+            if friend_request:
+                friend_request.accept() # accept friend
+                friend_request.delete() # remove user from friend request list
+                return Response({'message' : 'Friend request accepted.'},status.HTTP_201_CREATED)
+            else:
+                return Response({'message' : 'Something went wrong.'},status.HTTP_409_CONFLICT) 
+        except (KeyError,User.DoesNotExist) as e: 
             return Response({'message' : 'User not found.'}, status=status.HTTP_400_BAD_REQUEST) 
               
 
@@ -207,10 +230,15 @@ class FriendViewSet(viewsets.ModelViewSet):
 class ProfileViewSet(mixins.CreateModelMixin,
                      mixins.UpdateModelMixin,
                      viewsets.GenericViewSet):
-
+    """
+    Only create and update
+    """
     model = Profile
 
     def get_queryset(self):
+        """
+        Return different model on specific action
+        """
         if self.action == 'create':
             user = self.request.user
             return Profile.objects.filter(user=user)
@@ -218,6 +246,9 @@ class ProfileViewSet(mixins.CreateModelMixin,
             return User.objects.all()
     
     def get_serializer_class(self):
+        """
+        Return different serializer on specific action
+        """
         if self.action == 'create' or self.action == 'partial_update':
             return ProfileUserSerializer
 
@@ -225,6 +256,9 @@ class ProfileViewSet(mixins.CreateModelMixin,
         return ProfileSerializer
 
     def get_permissions(self):
+        """
+        Return different permission on specific action
+        """
         if self.action == 'create':
             permission_classes = []
         else:
@@ -233,6 +267,9 @@ class ProfileViewSet(mixins.CreateModelMixin,
   
     @action(detail=False)
     def myprofile(self, request):
+        """
+        Allow to retrieve user information with profil
+        """
         user = request.user
         queryset = Profile.objects.filter(user_id=user.id)
         serializer = ProfileSerializer(queryset, many=True)

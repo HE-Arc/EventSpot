@@ -17,7 +17,7 @@ library.add(fas);
 import { dom } from "@fortawesome/fontawesome-svg-core";
 dom.watch();
 
-
+//check if login is required
 router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresLogin)) {
       if (!store.getters.loggedIn) {
@@ -30,6 +30,7 @@ router.beforeEach((to, from, next) => {
     }
   })
 
+//refresh token when a new request to the service rest is done
 getAPI.interceptors.request.use(request => {
     
   if(store.state.refreshToken != undefined) {

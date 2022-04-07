@@ -21,18 +21,18 @@ schema_view = get_schema_view(
    public=True,
    permission_classes=[permissions.AllowAny],
 )
-
+# Model routes
 router = routers.DefaultRouter()
 router.register(r'events', views.EventViewSet, basename='Event')
 router.register(r'profiles', views.ProfileViewSet, basename='Profile')
 router.register(r'friends', views.FriendViewSet, basename='Friend')
 
+# add doc and token
 urlpatterns = [
     path('api/', include(router.urls)),
     path('api/token/', TokenObtainPairView.as_view()),
     path('api/token/refresh/', TokenRefreshView.as_view()),
     path('api/token/logout/', views.BlacklistRefreshView.as_view(), name="logout"),
-    re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path('api/swagger', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('api/redoc', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]

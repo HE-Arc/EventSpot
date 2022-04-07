@@ -17,10 +17,10 @@
                         <small for="formFile" class="form-text form-label">Import a picture for you profile image</small>
                       </div>
                       <div class="form-group row mt-3">
-                        <input type="text" name="username" id="user" v-model="formUser.username" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-1 shadow-none mx-auto my-2 custom-input" placeholder="Username">
+                        <input type="text" name="username" id="user" v-model="formUser.username" required class="form-control rounded-0 pt-2 pb-1 pr-1 pl-1 shadow-none mx-auto my-2 custom-input" placeholder="Username">
                       </div>
                       <div class="form-group row">
-                        <input type="email" name="emailusername" id="email" v-model="formUser.email" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-1 shadow-none mx-auto my-2 custom-input" placeholder="Email">
+                        <input type="email" name="emailusername" id="email" v-model="formUser.email" required class="form-control rounded-0 pt-2 pb-1 pr-1 pl-1 shadow-none mx-auto my-2 custom-input" placeholder="Email">
                       </div>
                       <div class="form-group row mt-3">
                         <input type="submit" value="Update" class="btn btn-primary">
@@ -39,10 +39,10 @@
                   <div class="row col-12 mx-auto justify-content-center text-center">
                     <form v-on:submit.prevent="changePassword" class="px-2 mx-auto justify-content-center text-center">
                       <div class="form-group row">
-                        <input type="password" name="password" id="pass" v-model="formPassword.password" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="New password">
+                        <input type="password" name="password" id="pass" v-model="formPassword.password" required class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="New password">
                       </div>
                       <div class="form-group row">
-                        <input type="password" name="confirm" id="confirm" v-model="formPassword.confirm" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="Confirmation">
+                        <input type="password" name="confirm" id="confirm" v-model="formPassword.confirm" required class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="Confirmation">
                       </div>
                       <div class="form-group row my-3">
                         <input type="submit" value="Change password" class="btn btn-primary">
@@ -109,10 +109,8 @@ export default {
             if(this.$store.state.APIData.profile_image)
               this.profile_image = baseURL + this.$store.state.APIData.profile_image;
           })
-          .catch(err => {
-            if (err.response.status === 401) {
-                this.$router.push({ name: 'logout' })
-            }
+          .catch(() => {
+           //nothing
           })
     },
 
@@ -121,16 +119,10 @@ export default {
           this.formUser.profile_image = event.target.files[0];
       },
 
+      /**
+       * Send request to update profil and user
+       */
       updateUser(){
-        if(!this.formUser.username) {
-          this.incorrectUser = "username is empty";
-          return 0;
-        }
-
-        if(!this.formUser.email) {
-          this.incorrectUser = "email is empty";
-          return 0;
-        }
 
         let formData = new FormData();
 
@@ -172,16 +164,14 @@ export default {
         })
       },
 
+      /**
+       * Send request to update password
+       */
       changePassword() {
 
-        if(!this.formPassword.password) {
-          this.incorrectPassword = "password is empty";
-        }
-        else if(!this.formPassword.confirm) {
-          this.incorrectPassword = "password confirmation is empty";
-        }
-        else if(this.formPassword.password != this.formPassword.confirm) {
+        if(this.formPassword.password != this.formPassword.confirm) {
           this.incorrectPassword = "password confirmation does not match";
+          return;
         }
 
         let formData = new FormData();

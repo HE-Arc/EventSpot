@@ -53,21 +53,20 @@ export default {
     },
     computed: mapState(['APIData']),
         created () {
+        //find my events
         getAPI.get('/events/', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
           .then(response => {
             this.$store.state.APIData = response.data;
           })
-          .catch(err => {
-            console.log(err)
+          .catch(() => {
           })
-
+        //find public events
         getAPI.get('/events/public', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
           .then(response => {
             this.publicEvents = response.data;
             this.loaded=true;
           })
-          .catch(err => {
-            console.log(err)
+          .catch(() => {
           })
     }
 }

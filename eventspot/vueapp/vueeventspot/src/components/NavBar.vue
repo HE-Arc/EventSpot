@@ -59,6 +59,7 @@ export default {
     }
   },
   created () {
+    //Only if we are logged, get info profile
     if(this.$store.state.accessToken != null)
     {
       getAPI.get('/profiles/myprofile/', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
@@ -66,6 +67,10 @@ export default {
         this.username = response.data.username;
         if(response.data.profile_image)
           this.profile_image = baseURL + response.data.profile_image;
+      }).catch(err => {
+        if (err.response.status === "401") {
+          this.$router.push({name : 'logout'});
+        }
       })
     }
   }

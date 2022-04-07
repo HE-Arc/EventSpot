@@ -7,6 +7,10 @@
 import { getAPI } from '../axios-api.js'
 export default {
   name: 'logout-vue',
+  
+  /**
+   * Send logout request and ban token
+   */
   created () {
     this.$store.dispatch('userLogout')
     .then(() => {

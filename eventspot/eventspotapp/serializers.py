@@ -1,6 +1,3 @@
-from dataclasses import field
-from email.policy import default
-from tkinter.messagebox import NO
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from eventspotapp.models import Event, FriendList, FriendRequest, User, Profile
@@ -36,6 +33,7 @@ class FriendRequestSerializer(serializers.ModelSerializer):
         fields = ('id','receiver', 'sender')
 
 class ProfileUserSerializer(serializers.ModelSerializer):
+    #check unique email
     email = serializers.EmailField(
         required=True,
         validators=[UniqueValidator(
@@ -43,6 +41,7 @@ class ProfileUserSerializer(serializers.ModelSerializer):
             message="This email is already in use."
         )]
     )
+    #check unique username
     username = serializers.CharField(
         required=True,
         validators=[UniqueValidator(
@@ -60,6 +59,9 @@ class ProfileUserSerializer(serializers.ModelSerializer):
         fields = ('email', 'username', 'password', 'confirm', 'profile_image')
     
     def validate(self, attrs):
+        """
+        If there is a new password then check confirmation
+        """
         if 'password' in attrs:
             if attrs['password'] != attrs['confirm']:
                 raise serializers.ValidationError({"password": "Password fields don't match."})
@@ -67,6 +69,9 @@ class ProfileUserSerializer(serializers.ModelSerializer):
         return attrs
         
     def create(self, validated_data):
+        """
+        Create a new user and a friendlist for the new user 
+        """
         user = User(
             email=validated_data['email'],
             username=validated_data['username']
@@ -77,11 +82,17 @@ class ProfileUserSerializer(serializers.ModelSerializer):
         return user
 
     def update(self, instance, validated_data):
+        """
+        Update user
+        """
         user = self.context['request'].user
 
+        # Check if the modifiee user is the connected one
         if user.pk != instance.pk:
             raise serializers.ValidationError({"authorize": "You dont have permission for this user."})
         
+        # Partial update, so validating data
+
         if 'password' in validated_data:
             instance.set_password(validated_data['password'])
 
@@ -95,6 +106,8 @@ class ProfileUserSerializer(serializers.ModelSerializer):
             instance.profile.profile_image = validated_data['profile_image']
         
         instance.save()
+        
+        # return data 
         
         data = {
             'username': instance.username,

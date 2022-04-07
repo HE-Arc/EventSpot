@@ -32,7 +32,7 @@ export default {
         imgDefault:
             "<img class='miniImg' src='@/assets/default.jpg' alt='default.jpg'/><br><br>",
         imgPath: "",
-        //https://github.com/pointhi/leaflet-color-markers
+        //Marker from https://github.com/pointhi/leaflet-color-markers
         myMarker: new L.AwesomeMarkers.icon({
             markerColor: 'black',
             icon : 'user'
@@ -62,8 +62,13 @@ export default {
         this.getCurrentPosition();
     },
     methods: {
+        /**
+         * build the map
+         */
         initMap() {
-            this.map = L.map('mapContainer').setView({lon: 48.8566, lat: 2.3522}, 5);
+            this.map = L.map('mapContainer').setView({lon: 7.4474, lat: 46.9480}, 5);
+            
+            //add controller to the map
             this.map.addControl(
                 new L.Control.Search({
                 url: "https://nominatim.openstreetmap.org/search?format=json&q={s}",
@@ -72,6 +77,7 @@ export default {
                 propertyLoc: ["lat", "lon"],
                 marker: L.circleMarker([0, 0], { radius: 30 }),
                 autoCollapse: true,
+                zoom: 10,
                 autoType: true,
                 minLength: 2,
                 })
@@ -81,22 +87,23 @@ export default {
                 minZoom: 5,
                 attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
             }).addTo(this.map);
-            this.map.on('zoomend',function(){
-                gl._update();
-            });
-
+            
+            //update gl when zoomed
             this.map.on('zoomend',function(){
                 gl._update();
             });
         },
+        /**
+         * Add events on the map
+         */
         addEvents() {
             this.events.forEach(event => {
 
-                 var marker = this.publicMarker;
+                 var marker = this.publicMarker; //by default it's a public event
 
-                 if(event.user.username === this.$store.state.username)
+                 if(event.user.username === this.$store.state.username) //if it's my events
                     marker = this.myMarker;
-                 else if(event.is_private)
+                 else if(event.is_private) //if it's a private event
                     marker = this.userFriendsMarker;
 
                  this.drawMarker(event, marker);
@@ -107,10 +114,6 @@ export default {
         * draw a marker on the map
         */
         drawMarker(event, icon) {
-            console.log("***************");
-            console.log(event);
-            console.log(icon);
-
             var mark = L.marker([event.lattitude,event.longitude], {
                 icon: icon,
             });
@@ -142,10 +145,13 @@ export default {
             mark.addTo(this.map);
         },
 
+        /**
+         * find the curent position and add to the map,
+         * only if accecpted location
+         */
         getCurrentPosition()
         {
             if (navigator.geolocation) {
-                //find the curent position
                 navigator.geolocation.getCurrentPosition((position) => {
                     var coords = [position.coords.latitude,position.coords.longitude];
                     L.marker(coords, {

@@ -13,16 +13,16 @@
           <div class="row">
             <form v-on:submit.prevent="register" class="form-group px-2">
               <div class="row">
-                <input type="text" name="username" id="user" v-model="username" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="Username">
+                <input type="text" name="username" id="user" v-model="username" required class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="Username">
               </div>
               <div class="row">
-                <input type="email" name="emailusername" id="email" v-model="email" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="Email">
+                <input type="email" name="emailusername" id="email" v-model="email" required class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="Email">
               </div>
               <div class="row">
-                <input type="password" name="password" id="pass" v-model="password" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="Password">
+                <input type="password" name="password" id="pass" v-model="password" required class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="Password">
               </div>
               <div class="row">
-                <input type="password" name="confirm" id="confirm" v-model="confirm" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="Password confirmation">
+                <input type="password" name="confirm" id="confirm" v-model="confirm" required class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="Password confirmation">
               </div>
               <div class="row mt-3">
                 <input type="submit" value="Submit" class="btn btn-primary">
@@ -56,32 +56,16 @@
       }
     },
     methods: {
+          /**
+           * Send register request
+           */
           register () { 
-            if(!this.username) {
-              this.incorrectAuth = "username is empty";
-              return 0;
-            }
-
-            if(!this.email) {
-              this.incorrectAuth = "email is empty";
-              return 0;
-            }
-
-            if(!this.password) {
-              this.incorrectAuth = "password is empty";
-              return 0;
-            }
-
-            if(!this.confirm) {
-              this.incorrectAuth = "password confirmation is empty";
-              return 0;
-            }
 
             if(this.password != this.confirm) {
               this.incorrectAuth = "password confirmation does not match";
-              return 0;
+              return;
             }
-
+        
             const user = {
               username: this.username,
               email: this.email,
@@ -105,17 +89,12 @@
             .catch(err => {
               if(err.response.data['email']) {
                 this.incorrectAuth = err.response.data['email']['email'];
-                return -1;
               }
-
-              if(err.response.data['username']) {
+              else if(err.response.data['username']) {
                 this.incorrectAuth = err.response.data['username']['username'];
-                return -1;
               }
-
-              if(err.response.data['password']) {
+              else if(err.response.data['password']) {
                 this.incorrectAuth = err.response.data['password']['password'];
-                return -1;
               }
             })
       }
@@ -135,9 +114,11 @@ body {
 }
 
 #logo {
-  background-color: #CECECE;
+  background-color: #ffffff!important;
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
+  border-top:1px solid #ccc;
+  border-right:1px solid rgb(235, 235, 235);
 }
 
 #img-logo {

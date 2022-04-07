@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-+t&=8t!0=_zj)^x5$-4dj%e=24#v-1(btv51yt5wdt%fq6llb_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['eventspot.srvz-webapp.he-arc.ch']
 
 
 # Application definition
@@ -97,11 +97,11 @@ WSGI_APPLICATION = 'eventspot.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'eventspotdb',
-        'USER': 'postgres',
-        'PASSWORD': 'root',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'NAME': os.environ.get('GROUPNAME'),
+        'USER': os.environ.get('GROUPNAME','postgres'),
+        'PASSWORD': os.environ.get('PASSWORD',''),
+        'HOST': os.environ.get('POSTGRES_HOST','localhost'),
+        'PORT': os.environ.get('POSTGRES_PORT','5432'),
     }
 }
 

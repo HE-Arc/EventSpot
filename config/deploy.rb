@@ -30,13 +30,13 @@ namespace :python do
 	    execute "python3.8 -m venv #{venv_path}"
             execute "source #{venv_path}/bin/activate"
 	    execute "#{venv_path}/bin/pip install -r #{release_path}/requirements.txt"
-	    execute "cd #{release_path}/eventspot && #{venv_path}/bin/python3.8 manage.py migrate"
-	    execute "cd #{release_path}/eventspot && #{venv_path}/bin/python3.8 manage.py collectstatic"
-	    execute "cd #{release_path}/eventspot/vueapp/vueeventspot && npm install"
-	    execute "cd #{release_path}/eventspot/vueapp/vueeventspot && npm run build"
-	    execute "sudo service nginx stop"
-	    execute "sudo service nginx start"
-	    execute "sudo sv reload uwsgi"
+	execute "cd #{release_path}/eventspot && #{venv_path}/bin/python3.8 manage.py migrate"
+	execute "cd #{release_path}/eventspot && #{venv_path}/bin/python3.8 manage.py collectstatic"
+	execute "cd #{release_path}/eventspot/vueapp/vueeventspot && npm install"
+	execute "cd #{release_path}/eventspot/vueapp/vueeventspot && npm run build"
+	execute "sudo service nginx stop"
+	execute "sudo service nginx start"
+	execute "sudo sv reload uwsgi"
         end
     end
 end

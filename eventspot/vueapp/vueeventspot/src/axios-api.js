@@ -2,7 +2,7 @@ import axios from 'axios'
 import router from './routes.js'
 
 //server rest
-const baseURL = 'http://127.0.0.1:8000';
+const baseURL = 'https://eventspot.srvz-webapp.he-arc.ch';
 const apiURL = baseURL + "/api";
 
 //create a axios pointing on rest

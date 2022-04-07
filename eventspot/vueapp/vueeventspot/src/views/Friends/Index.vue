@@ -84,20 +84,22 @@ export default {
         }
     },
     watch:{
-        'form.username': function (newVal, oldVal){
-            console.log(newVal,oldVal)
+        // watch if field username change to retrieve username
+        'form.username': function (){
             this.searchMembers();
         },
     },
     computed: mapState(['APIData']),
     methods: {
+        /**
+         * Send friend request
+         */
         submitForm(){
             let formData = new FormData()
             formData.append('username', this.form.username)
 
-            getAPI.post('/friends/create', formData, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+            getAPI.post('/friends/', formData, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
                 .then(response => {
-                    console.log(response)
                     if(response.status == 201)
                     {
                         this.message = response.data['message']
@@ -105,14 +107,17 @@ export default {
                     }
                 })
                 .catch(err => {
+                    //if error show flashmesage
                     switch(err.response.status){
                         case 409: this.type = 'warning'; break;
                         case 400: this.type = 'danger'; break;
                     }
                     this.message = err.response.data['message']
-                    console.log(err)
                 })
         },
+        /**
+         * Search first 5 user which start with form.username
+         */
         searchMembers() {
             if(this.form.username == '')
                 return;
@@ -121,26 +126,28 @@ export default {
                 .then(response => {
                     this.results = response.data
                 })
-                .catch(err => {
-                    console.log(err)
+                .catch(() => {
                 })
         },
+        /**
+         * When user click on a proposal username
+         */
         addValueToInput(username) {
             this.form.username = username;
         },
+        /**
+         * Retrieve friends and friends request
+         */
         getData(){
             getAPI.get('/friends/', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
                 .then(response => {
-                    console.log('Post API has recieved data')
                     this.$store.state.APIData = response.data
                     this.friends_requests = this.APIData.friends_requests
                     if(this.APIData.friends != undefined){
                         this.friends = this.APIData.friends[0].friends
                     }
                 })
-                .catch(err => {
-                    self.errors = err.response.data
-                    console.log(err)
+                .catch(() => {
                 })
         }
     },

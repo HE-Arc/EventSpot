@@ -4,7 +4,7 @@
         <main class="container">
             <div class="row justify-content-center px-4">
                     <h1 class="display-1 text-center">Share your events.</h1>
-                    <h2 class="text-center">EventSpot is a website for share your events. You can create an event, associate pictures, location, date and write about it  ! Finally, you can share your creations with your friends.</h2>
+                    <h2 class="text-center">EventSpot is a website for sharing your events. You can create an event, associate pictures, location, date and write about it  ! Finally, you can share your creations with your friends.</h2>
             </div>
         </main>
         <MyFooter></MyFooter>

@@ -1,6 +1,7 @@
 import { createStore } from 'vuex'
 import { getAPI } from './axios-api'
 
+//store data, token and username
 const store = createStore({
   state: {
      accessToken: localStorage.getItem('accessToken'),
@@ -14,6 +15,7 @@ const store = createStore({
       state.refreshToken = refresh
       state.username = username
 
+      //set data to localstorage
       localStorage.setItem('accessToken', access)
       localStorage.setItem('refreshToken', refresh)
       localStorage.setItem('username', username)
@@ -24,6 +26,7 @@ const store = createStore({
       state.refreshToken = null
       state.username = null
 
+      //remove data to localstorage
       localStorage.removeItem('accessToken')
       localStorage.removeItem('refreshToken')
       localStorage.removeItem('username')

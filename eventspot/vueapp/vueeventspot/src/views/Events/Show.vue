@@ -1,7 +1,7 @@
 <template>
     <div class="EventsShow">
         <NavBar></NavBar>
-        <main class="container">
+        <main v-if="APIData.title != null" class="container">
             <FlashMessage class="mt-5" v-if="this.$route.params.state == 'success'" :type="'success'" :message="'Operation done with success!'"></FlashMessage>
             <h1>{{APIData.title}}</h1><br>
             <div v-if="APIData.user.username == this.$store.state.username" class="form-group mb-3">
@@ -41,6 +41,9 @@ export default {
     },
     computed: mapState(['APIData']),
     methods: {
+        /**
+         * Send request to destroy an event, then redirect
+         */
         destroy() 
         {
             VueSimpleAlert.confirm("Are you sure?").then(() => {
@@ -48,13 +51,13 @@ export default {
                 .then(() => {
                     this.$router.push({ name: 'events', params: { state:"success"} })
                 })
-                .catch(err => {
-                    console.log(err);
+                .catch(() => {
                 })   
             }).catch(()=>{});
         }
     },
     created () {
+        //find the event to show
         getAPI.get('/events/' +this.$route.params.id, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
           .then(response => {
             this.$store.state.APIData = response.data;
@@ -65,8 +68,7 @@ export default {
             }
 
           })
-          .catch(err => {
-            console.log(err);
+          .catch(() => {
           })
     }
 }

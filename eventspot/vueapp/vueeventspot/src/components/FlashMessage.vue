@@ -24,12 +24,15 @@ export default {
      },
      methods:
      {
+         /**
+          * Close flash message
+          */
          close(){
              this.typeData = null;
          },
      },
       watch: { 
-      	type: function(newVal, oldVal) { // watch it
+      	type: function(newVal, oldVal) { // watch if the flashmessage must change (new data)
           this.typeData = this.type;
         }
       }

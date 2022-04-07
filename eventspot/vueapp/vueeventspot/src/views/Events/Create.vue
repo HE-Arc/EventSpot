@@ -38,8 +38,7 @@
                     </div>
                     <div class="col-md-6">
                          <div id="mapContainer" class="mb-2"></div>
-                         <small v-if="errors.lattitude != null" class="form-text text-danger ">{{errors.lattitude[0]}}</small>
-                         <small v-if="errors.longitude != null" class="form-text text-danger ">{{errors.longitude[0]}}</small>
+                         <small v-if="errors.lattitude != null || errors.longitude != null" class="form-text text-danger ">Please select coordinate</small><br>
                          <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                     <div class="mb-3">&nbsp;</div>
@@ -75,7 +74,7 @@ export default {
     data() {
     return {
       requestApi : getAPI.post, //method ref
-      targetApi : '/events/create',
+      targetApi : '/events/',
       pageTitle : 'Create a new event',
       map: null,
       homeMarker: null,
@@ -111,9 +110,13 @@ export default {
   },
   created () 
   {
+    //case udpate (if we got an id)
     if(this.$route.params.id != undefined)
     {
+        //change title
         this.pageTitle = "Update event";
+
+        //retrieve event to update
         getAPI.get('/events/' +this.$route.params.id, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
         .then(response => {
         this.$store.state.APIData = response.data;
@@ -128,8 +131,11 @@ export default {
         this.form.longitude = this.APIData.longitude;
 
         this.requestApi = getAPI.put;
-        this.targetApi = `events/${this.APIData.id}/update`;
 
+        //change method to call when submit form
+        this.targetApi = `events/${this.APIData.id}/`;
+
+        //show event on map
         this.map.setView([this.form.lattitude,this.form.longitude], 5);
         this.clickMarker = L.marker([this.form.lattitude,this.form.longitude], {
                 icon: this.clickMarkerIcon,
@@ -137,21 +143,21 @@ export default {
 
 
         })
-        .catch(err => {
-        console.log(err);
+        .catch(() => {
         })
     }
     
   },
   mounted() {
     // initialize Leaflet
-    this.map = L.map('mapContainer').setView({lon: 48.8566, lat: 2.3522}, 5);
+    this.map = L.map('mapContainer').setView({lon: 7.4474, lat: 46.9480}, 5);
     this.map.addControl(
         new L.Control.Search({
           url: "https://nominatim.openstreetmap.org/search?format=json&q={s}",
           jsonpParam: "json_callback",
           propertyName: "display_name",
           propertyLoc: ["lat", "lon"],
+          zoom: 10,
           marker: L.circleMarker([0, 0], { radius: 30 }),
           autoCollapse: true,
           autoType: true,
@@ -182,6 +188,7 @@ export default {
 
       }
     
+    //add click event on map to choose the pos to the event
     this.map.on("click", (ev) => {
         self.form.lattitude = ev.latlng.lat.toFixed(4);
         self.form.longitude = ev.latlng.lng.toFixed(4);
@@ -202,26 +209,31 @@ export default {
     }
   },
     methods: {
+        /**
+         * Update file
+         */
         onChange(event) {
-            console.log(event.target.value);
             this.form.image = event.target.files[0]
-            console.log(typeof this.form.image);
         },
+        /**
+         * Wait that the event has been correctly update or create to redirect to show
+         */
         async submitForm(){
           
           let formData = new FormData();
           const self = this;
           
+          //add all input to formdata
           Object.entries(this.form).forEach(([key, value]) => {
             formData.append(key, value);
            });
 
+          //correct image, we don't want to send image if the user has not change it
            if(this.form.image == null || typeof this.form.image === 'string') {
              formData.delete('image');
            }
            
-           console.log(formData);
-
+           //send good request (update or create)
           await this.requestApi(this.targetApi, formData,
           { headers: {
               Authorization: `Bearer ${this.$store.state.accessToken}`}
@@ -230,14 +242,11 @@ export default {
             this.$router.push({ name: 'events.show', params: { id: response.data.id , state:"success"} })
           })
           .catch(error => {
-            console.log(error);
+            //if error display them on view
               if(error.response.status == '400')
               {
                   self.errors = error.response.data;
               }
-            console.log(error.response.data);  
-            console.log(error.response.status);  
-            console.log(error.response.headers);
           })
         }
     },

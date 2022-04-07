@@ -1,10 +1,9 @@
 <template>
   <header>
     <nav class="navbar navbar-expand-md navbar-light" id="navbar">
-      <router-link class="ms-3 me-2 d-none d-md-inline-block" :to="{ name: 'events' }" exact>
+      <router-link class="ms-3 me-2 d-none d-md-inline-block" :to="{ name: 'home' }" exact>
         <img id="img-logo" alt="EventSpot Logo" width="50" height="50" src="../assets/mylogo.png">
       </router-link>
-      <a class="navbar-brand ms-2" href="/">EventSpot</a>
 
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggle">
         <span class="navbar-toggler-icon text-primary"></span>
@@ -60,13 +59,18 @@ export default {
     }
   },
   created () {
+    //Only if we are logged, get info profile
     if(this.$store.state.accessToken != null)
     {
-      getAPI.get('/profile/', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+      getAPI.get('/profiles/myprofile/', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
       .then(response => {
-      this.username = response.data.username;
-      this.profile_image = baseURL + response.data.profile_image;
-      console.log(response);
+        this.username = response.data.username;
+        if(response.data.profile_image)
+          this.profile_image = baseURL + response.data.profile_image;
+      }).catch(err => {
+        if (err.response.status === "401") {
+          this.$router.push({name : 'logout'});
+        }
       })
     }
   }

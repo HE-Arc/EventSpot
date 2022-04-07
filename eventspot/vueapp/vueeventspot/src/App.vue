@@ -21,13 +21,8 @@ export default {
   }
 
   body {
-    /*margin: 0;
-    padding: 0; */
-
     margin: 0 0 100px !important;
-    /* bottom = footer height */
     padding: 0;
-
     background-color: #f8f8f8!important;
   }
 </style>

@@ -17,10 +17,10 @@
                         <small for="formFile" class="form-text form-label">Import a picture for you profile image</small>
                       </div>
                       <div class="form-group row mt-3">
-                        <input type="text" name="username" id="user" v-model="formUser.username" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-1 shadow-none mx-auto my-2 custom-input" placeholder="Username">
+                        <input type="text" name="username" id="user" v-model="formUser.username" required class="form-control rounded-0 pt-2 pb-1 pr-1 pl-1 shadow-none mx-auto my-2 custom-input" placeholder="Username">
                       </div>
                       <div class="form-group row">
-                        <input type="email" name="emailusername" id="email" v-model="formUser.email" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-1 shadow-none mx-auto my-2 custom-input" placeholder="Email">
+                        <input type="email" name="emailusername" id="email" v-model="formUser.email" required class="form-control rounded-0 pt-2 pb-1 pr-1 pl-1 shadow-none mx-auto my-2 custom-input" placeholder="Email">
                       </div>
                       <div class="form-group row mt-3">
                         <input type="submit" value="Update" class="btn btn-primary">
@@ -39,10 +39,10 @@
                   <div class="row col-12 mx-auto justify-content-center text-center">
                     <form v-on:submit.prevent="changePassword" class="px-2 mx-auto justify-content-center text-center">
                       <div class="form-group row">
-                        <input type="password" name="password" id="pass" v-model="formPassword.password" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="New password">
+                        <input type="password" name="password" id="pass" v-model="formPassword.password" required class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="New password">
                       </div>
                       <div class="form-group row">
-                        <input type="password" name="confirm" id="confirm" v-model="formPassword.confirm" class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="Confirmation">
+                        <input type="password" name="confirm" id="confirm" v-model="formPassword.confirm" required class="form-control rounded-0 pt-2 pb-1 pr-1 pl-4 shadow-none mx-auto my-2 custom-input" placeholder="Confirmation">
                       </div>
                       <div class="form-group row my-3">
                         <input type="submit" value="Change password" class="btn btn-primary">
@@ -97,7 +97,7 @@ export default {
     },
     computed: mapState(['APIData']),
     created () {        
-        getAPI.get('/profile/', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+        getAPI.get('/profiles/myprofile/', { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
           .then(response => {
             console.log('Post API has recieved data');
             this.$store.state.APIData = response.data;
@@ -105,12 +105,12 @@ export default {
             this.formUser.username = this.$store.state.APIData.username;
             this.formUser.email = this.$store.state.APIData.email;
             this.id = this.$store.state.APIData.id;
-            this.profile_image = baseURL + this.$store.state.APIData.profile_image;
+
+            if(this.$store.state.APIData.profile_image)
+              this.profile_image = baseURL + this.$store.state.APIData.profile_image;
           })
-          .catch(err => {
-            if (err.response.status === 401) {
-                this.$router.push({ name: 'logout' })
-            }
+          .catch(() => {
+           //nothing
           })
     },
 
@@ -119,16 +119,10 @@ export default {
           this.formUser.profile_image = event.target.files[0];
       },
 
+      /**
+       * Send request to update profil and user
+       */
       updateUser(){
-        if(!this.formUser.username) {
-          this.incorrectUser = "username is empty";
-          return 0;
-        }
-
-        if(!this.formUser.email) {
-          this.incorrectUser = "email is empty";
-          return 0;
-        }
 
         let formData = new FormData();
 
@@ -136,8 +130,9 @@ export default {
           formData.append(key, value);
         });
 
-        getAPI.put('/profiles/update/' + this.id + '/', formData, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+        getAPI.patch(`/profiles/${this.id}/`, formData, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
         .then(response => {
+          this.incorrectUser = false;
           this.successUser = "Profile updated sucessfully"
 
           this.$store.state.APIData.username = response.data.username;
@@ -157,38 +152,26 @@ export default {
           this.successUser = false;
 
           if(err.response.data['email']) {
-            this.incorrectUser = err.response.data['email']['email'];
-            return -1;
+            this.incorrectUser = err.response.data['email'][0];
           }
-
-          if(err.response.data['username']) {
-            this.incorrectUser = err.response.data['username']['username'];
-            return -1;
+          else if(err.response.data['username']) {
+            this.incorrectUser = err.response.data['username'][0];
           }
-
-          if(err.response.data['authorize']) {
+          else if(err.response.data['authorize']) {
             this.incorrectUser = err.response.data['authorize'][0];
-            return -1;
           }
 
         })
       },
 
+      /**
+       * Send request to update password
+       */
       changePassword() {
-
-        if(!this.formPassword.password) {
-          this.incorrectPassword = "password is empty";
-          return 0;
-        }
-
-        if(!this.formPassword.confirm) {
-          this.incorrectPassword = "password confirmation is empty";
-          return 0;
-        }
 
         if(this.formPassword.password != this.formPassword.confirm) {
           this.incorrectPassword = "password confirmation does not match";
-          return 0;
+          return;
         }
 
         let formData = new FormData();
@@ -197,21 +180,21 @@ export default {
           formData.append(key, value);
         });
 
-        getAPI.put('/profiles/password/' + this.id + '/', formData, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
-        .then(
-          this.successPassword = "password updated successfully"
+        getAPI.patch('/profiles/' + this.id + '/', formData, { headers: {Authorization: `Bearer ${this.$store.state.accessToken}`}})
+        .then(()=>
+          {
+            this.incorrectPassword = false;
+            this.successPassword = "password updated successfully";
+          }
         )
         .catch(err => {
           this.successPassword = false;
 
           if(err.response.data['password']) {
-            this.incorrectAuth = err.response.data['password'][0];
-            return -1;
+            this.incorrectPassword = err.response.data['password'][0];
           }
-
-          if(err.response.data['authorize']) {
-            this.incorrectAuth = err.response.data['authorize'][0];
-            return -1;
+          else if(err.response.data['authorize']) {
+            this.incorrectPassword = err.response.data['authorize'][0];
           }
         })
 

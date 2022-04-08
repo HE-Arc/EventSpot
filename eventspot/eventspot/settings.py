@@ -97,9 +97,9 @@ WSGI_APPLICATION = 'eventspot.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('GROUPNAME', 'eventspotdb'),
+        'NAME': os.environ.get('GROUPNAME'),
         'USER': os.environ.get('GROUPNAME','postgres'),
-        'PASSWORD': os.environ.get('PASSWORD','root'),
+        'PASSWORD': os.environ.get('PASSWORD',''),
         'HOST': os.environ.get('POSTGRES_HOST','localhost'),
         'PORT': os.environ.get('POSTGRES_PORT','5432'),
     }

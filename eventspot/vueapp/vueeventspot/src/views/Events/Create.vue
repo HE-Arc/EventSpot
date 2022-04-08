@@ -21,14 +21,14 @@
                         <div class="form-group mb-2">
                             <label for="date">Start Date</label>
                             <input required v-model="form.start_date" type="datetime-local" class="form-control" id="start_date" aria-describedby="start_date">
-                            <small v-if="errors.dates == null || errors.start_date == null" class="form-text text-muted">Enter a start date for your event</small>
+                            <small v-if="errors.dates == null && errors.start_date == null" class="form-text text-muted">Enter a start date for your event</small>
                             <small v-else-if="errors.dates != null" class="form-text text-danger ">{{errors.dates[0]}}</small>
                             <small v-else-if="errors.start_date != null" class="form-text text-danger ">{{errors.start_date[0]}}</small>
                         </div>
                         <div class="form-group mb-2">
                             <label for="date">End Date</label>
                             <input required v-model="form.end_date" type="datetime-local" class="form-control" id="end_date" aria-describedby="end_date">
-                            <small v-if="errors.dates == null || errors.start_date == null" class="form-text text-muted">Enter a end date for your event</small>
+                            <small v-if="errors.dates == null && errors.start_date == null" class="form-text text-muted">Enter a end date for your event</small>
                             <small v-else-if="errors.dates != null" class="form-text text-danger ">{{errors.dates[0]}}</small>
                             <small v-else-if="errors.end_date != null" class="form-text text-danger ">{{errors.end_date[0]}}</small>
                         </div>

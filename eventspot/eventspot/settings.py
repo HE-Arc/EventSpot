@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-+t&=8t!0=_zj)^x5$-4dj%e=24#v-1(btv51yt5wdt%fq6llb_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['eventspot.srvz-webapp.he-arc.ch']
 
@@ -97,9 +97,9 @@ WSGI_APPLICATION = 'eventspot.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('GROUPNAME'),
+        'NAME': os.environ.get('GROUPNAME', 'eventspotdb'),
         'USER': os.environ.get('GROUPNAME','postgres'),
-        'PASSWORD': os.environ.get('PASSWORD',''),
+        'PASSWORD': os.environ.get('PASSWORD','root'),
         'HOST': os.environ.get('POSTGRES_HOST','localhost'),
         'PORT': os.environ.get('POSTGRES_PORT','5432'),
     }

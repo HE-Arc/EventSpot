@@ -10,6 +10,7 @@ from rest_framework.pagination import PageNumberPagination
 from collections import OrderedDict
 from django.db.models import Q
 from rest_framework.decorators import action
+from django.utils import timezone
 
 class OneByOneItems(PageNumberPagination):
     """
@@ -52,9 +53,9 @@ class EventViewSet(viewsets.ModelViewSet):
         friendsList = FriendList.objects.get(user=request.user)
         events = Event.objects.all().filter(Q(user__id__in=friendsList.friends.all()) 
                                         | Q(is_private=False) 
-                                        | Q(user=request.user)).distinct()
+                                        | Q(user=request.user)).filter(end_date__gte=timezone.now()).distinct()
     
-        serializer = EventSerializer(events,many=True)
+        serializer = EventSerializer(events, many=True)
     
         return Response(serializer.data)
     

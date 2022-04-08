@@ -104,6 +104,7 @@ export default {
                     {
                         this.message = response.data['message']
                         this.type = "success"
+                        this.form.username = ""
                     }
                 })
                 .catch(err => {

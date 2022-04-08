@@ -18,7 +18,17 @@ class EventSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     class Meta:
         model = Event
-        fields = ('id','title','description','user','date','longitude','lattitude','image','is_private')
+        fields = ('id','title','description','user','start_date', 'end_date', 'longitude','lattitude','image','is_private')
+
+    def validate(self, attrs):
+        """
+        Check start_date and end_date
+        """
+        if 'start_date' in attrs and 'end_date' in attrs:
+            if attrs['end_date'] < attrs['start_date']:
+                raise serializers.ValidationError({"dates": "End date cannot be previous to start date"})
+
+        return attrs
         
 class FriendListSerializer(serializers.ModelSerializer):
     friends = UserSerializer(many=True, read_only=True)

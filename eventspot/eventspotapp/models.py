@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_delete, pre_save
 from django.dispatch import receiver
 from django.utils import timezone
+from datetime import timedelta
 import os
 
 class Event (models.Model):
@@ -14,19 +15,12 @@ class Event (models.Model):
     user =  models.ForeignKey(User, on_delete=models.CASCADE,default="")
     title = models.CharField(max_length=50)
     description = models.TextField()
-    date = models.DateTimeField(default=timezone.now)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
     lattitude = models.DecimalField(max_digits=9, decimal_places=6)
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
     image = models.ImageField(upload_to='uploads/',blank =True)
     is_private = models.BooleanField(default=False)
-
-    def save(self, *args, **kwargs):
-        """
-        before saving check if the date is not a previous date
-        """
-        if self.date < timezone.now():
-            self.date = timezone.now()
-        super(Event, self).save(*args, **kwargs)
         
     def __str__(self):
         return self.title

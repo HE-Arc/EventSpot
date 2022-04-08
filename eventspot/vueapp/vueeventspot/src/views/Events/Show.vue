@@ -9,7 +9,8 @@
                 <a href="#" data-toggle="modal" data-target="#confirm-delete" @click="destroy()" class="btn btn-danger">Delete</a><br>
             </div>
             <small v-if="APIData.user != undefined">Author : {{APIData.user.username}}</small><br>
-            <strong>Date : {{this.$moment(APIData.date).format('YYYY-MM-DD HH:mm')}}</strong>
+            <strong>Start Date : {{this.$moment(APIData.start_date).format('YYYY-MM-DD HH:mm')}}</strong><br>
+            <strong>End Date : {{this.$moment(APIData.end_date).format('YYYY-MM-DD HH:mm')}}</strong>
             <img style="max-height: 33vh;" :src="this.img" class="mb-5 mp-5 img-responsive center-block d-block mx-auto"  alt="image event">
             <p class="text-justify">{{APIData.description}}</p>
         </main>

@@ -4,6 +4,7 @@
       <router-link class="ms-3 me-2 d-none d-md-inline-block" :to="{ name: 'home' }" exact>
         <img id="img-logo" alt="EventSpot Logo" width="50" height="50" src="../assets/mylogo.png">
       </router-link>
+      <router-link class="d-inline-block d-md-none nav-link text-dark" active-class="active" :to="{ name: 'home' }" exact>Eventspot</router-link>
 
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggle">
         <span class="navbar-toggler-icon text-primary"></span>

@@ -30,7 +30,6 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['eventspot.srvz-webapp.he-arc.ch']
 
-
 # Application definition
 
 INSTALLED_APPS = [

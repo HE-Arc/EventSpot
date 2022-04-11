@@ -52,13 +52,7 @@ class ProfileUserSerializer(serializers.ModelSerializer):
         )]
     )
     #check unique username
-    username = serializers.CharField(
-        required=True,
-        validators=[UniqueValidator(
-            queryset=User.objects.all(),
-            message="This username is already in use."
-        )]
-    )
+    username = serializers.CharField(required=True)
 
     password = serializers.CharField(write_only=True, required=True)
     confirm = serializers.CharField(write_only=True, required=True)
@@ -77,6 +71,11 @@ class ProfileUserSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({"password": "Password fields don't match."})
 
         return attrs
+
+    def validate_username(self,value):
+        if User.objects.filter(username=value.lower()).exists():
+            raise serializers.ValidationError("This username is already in use.")
+        return value.lower()
         
     def create(self, validated_data):
         """

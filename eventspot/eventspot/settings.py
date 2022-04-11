@@ -29,6 +29,7 @@ SECRET_KEY = 'django-insecure-+t&=8t!0=_zj)^x5$-4dj%e=24#v-1(btv51yt5wdt%fq6llb_
 DEBUG = False
 
 ALLOWED_HOSTS = ['eventspot.srvz-webapp.he-arc.ch']
+# ALLOWED_HOSTS = []
 
 # Application definition
 

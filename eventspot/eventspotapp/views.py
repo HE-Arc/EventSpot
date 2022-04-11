@@ -1,3 +1,4 @@
+from multiprocessing import context
 from django.http import HttpResponseBadRequest
 from rest_framework import status, viewsets, mixins, generics
 from rest_framework.response import Response
@@ -266,6 +267,11 @@ class ProfileViewSet(mixins.CreateModelMixin,
         else:
             permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
+
+    def get_serializer_context(self):
+        context = super(ProfileViewSet, self).get_serializer_context()
+        context.update({"request": self.request})
+        return context
   
     @action(detail=False)
     def myprofile(self, request):

@@ -1,3 +1,4 @@
+from jinja2 import Undefined
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from eventspotapp.models import Event, FriendList, FriendRequest, User, Profile
@@ -43,6 +44,7 @@ class FriendRequestSerializer(serializers.ModelSerializer):
         fields = ('id','receiver', 'sender')
 
 class ProfileUserSerializer(serializers.ModelSerializer):
+
     #check unique email
     email = serializers.EmailField(
         required=True,
@@ -51,9 +53,8 @@ class ProfileUserSerializer(serializers.ModelSerializer):
             message="This email is already in use."
         )]
     )
-    #check unique username
-    username = serializers.CharField(required=True)
 
+    username = serializers.CharField(required=True)
     password = serializers.CharField(write_only=True, required=True)
     confirm = serializers.CharField(write_only=True, required=True)
     profile_image = serializers.ImageField(required=False)
@@ -72,9 +73,13 @@ class ProfileUserSerializer(serializers.ModelSerializer):
 
         return attrs
 
+    #check unique username
     def validate_username(self,value):
-        if User.objects.filter(username=value.lower()).exists():
-            raise serializers.ValidationError("This username is already in use.")
+        # if user is undefined or is username is different to current logged user
+        if self.context['request'].user == Undefined or self.context['request'].user.username != value.lower():
+            # if username already exists
+            if User.objects.filter(username=value.lower()).exists():
+                raise serializers.ValidationError("This username is already in use.")
         return value.lower()
         
     def create(self, validated_data):

@@ -61,6 +61,8 @@
            */
           register () { 
 
+            this.incorrectAuth = false;
+
             if(this.password != this.confirm) {
               this.incorrectAuth = "password confirmation does not match";
               return;
@@ -76,27 +78,34 @@
             getAPI.post('/profiles/', user)
             .then(
 
-              setTimeout(() =>
-                this.$store.dispatch('userLogin', {
-                  username: this.username,
-                  password: this.password
-                })
-                .then(() => {
-                  this.$router.push({ name: 'events' })
-                })
-              , 1000)
+              setTimeout(() => {
+                 
+                if(this.incorrectAuth == false) {
+                    this.$store.dispatch('userLogin', {
+                    username: this.username,
+                    password: this.password
+                  })
+                  .then(() => {
+                    this.$router.push({ name: 'events' })
+                  })
+                }
+
+              }, 1000)
+
             )
             .catch(err => {
               if(err.response.data['email']) {
-                this.incorrectAuth = err.response.data['email']['email'];
+                this.incorrectAuth = err.response.data['email'][0];
               }
               else if(err.response.data['username']) {
-                this.incorrectAuth = err.response.data['username']['username'];
+                this.incorrectAuth = err.response.data['username'][0];
               }
               else if(err.response.data['password']) {
-                this.incorrectAuth = err.response.data['password']['password'];
+                this.incorrectAuth = err.response.data['password'][0];
               }
-            })
+
+              return 0;
+            }) 
       }
     }
   }

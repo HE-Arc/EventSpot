@@ -54,6 +54,7 @@
                 />   
             </div>
         </main>
+        <MyFooter></MyFooter>
     </div>
 </template>
 
@@ -61,6 +62,7 @@
 import { getAPI } from '../../axios-api.js'
 import { mapState } from 'vuex'
 import NavBar from '../../components/NavBar.vue'
+import MyFooter from '../../components/Footer.vue'
 import CardFriends from '../../components/CardFriends.vue'
 import FlashMessage from '../../components/FlashMessage.vue'
 
@@ -69,7 +71,8 @@ export default {
     components: {
         NavBar,
         CardFriends,
-        FlashMessage
+        FlashMessage,
+        MyFooter
     },
     data() {
         return {

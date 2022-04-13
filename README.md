@@ -8,6 +8,11 @@ EventSpot is a website for sharing your events. You can create an event, associa
 git clone git@github.com:HE-Arc/EventSpot.git
 ```
 
+## API Documentation
+
+- Swagger : https://eventspot.srvz-webapp.he-arc.ch/api/swagger
+- ReDoc : https://eventspot.srvz-webapp.he-arc.ch/api/redoc
+
 ## Backend (Django)
 ### Requirements
 - Python

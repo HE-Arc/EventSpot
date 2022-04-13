@@ -5,7 +5,7 @@ EventSpot is a website for sharing your events. You can create an event, associa
 
 ## Backend (Django)
 ### Requirements
-
+- Python
 ### Setup
 
 ## Frontend (VueJs)

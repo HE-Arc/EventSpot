@@ -1,1 +1,4 @@
-![image](https://user-images.githubusercontent.com/91072148/151372928-7aca4ae1-a658-43f8-bab5-7c4ea50dc86f.png)
+# EventSpot
+
+## Share your events.
+EventSpot is a website for sharing your events. You can create an event, associate pictures, location, date and write about it ! Finally, you can share your creations with your friends.

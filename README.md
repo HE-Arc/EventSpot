@@ -71,7 +71,7 @@ python3 manage.py runserver
 - NodeJs
 ### Setup
 
-Vue Setup
+Install vue depedencies
 ```
 cd eventspot/vueapp/vueeventspot
 npm install

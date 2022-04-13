@@ -37,6 +37,16 @@ pip install -r requirements.txt
 pip3 install -r requirements.txt
 ```
 
+Run migrations
+```
+# Windows
+cd eventspot
+python manage.py migrate
+# Linux
+cd eventspot
+python3 manage.py migrate
+```
+
 Run server
 ```
 # Windows

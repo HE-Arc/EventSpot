@@ -11,6 +11,10 @@ git clone git@github.com:HE-Arc/EventSpot.git
 ## Backend (Django)
 ### Requirements
 - Python
+
+### Dependecies
+- Open requirements.txt
+
 ### Setup
 
 Create virtual environment

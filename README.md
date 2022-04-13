@@ -8,6 +8,12 @@ EventSpot is a website for sharing your events. You can create an event, associa
 - Python
 ### Setup
 
+```
+git clone git@github.com:HE-Arc/workshop-django.git
+cd workshop-django
+git checkout start
+```
+
 ## Frontend (VueJs)
 ### Requirements
 

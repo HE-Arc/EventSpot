@@ -3,15 +3,15 @@
 ## Share your events.
 EventSpot is a website for sharing your events. You can create an event, associate pictures, location, date and write about it ! Finally, you can share your creations with your friends.
 
+### Clone the project
+```
+git clone git@github.com:HE-Arc/EventSpot.git
+```
+
 ## Backend (Django)
 ### Requirements
 - Python
 ### Setup
-
-Clone the project
-```
-git clone git@github.com:HE-Arc/EventSpot.git
-```
 
 Create virtual environment
 ```

@@ -24,6 +24,7 @@ python -m venv .venv
 # Linux
 python3 -m venv .venv
 ```
+<br>
 
 Activate virtual
 ```
@@ -32,6 +33,7 @@ source .venv/Scripts/activate
 # Linux
 source .venv/bin/activate
 ```
+<br>
 
 Install all Python requirements
 ```
@@ -40,6 +42,7 @@ pip install -r requirements.txt
 # Linux
 pip3 install -r requirements.txt
 ```
+<br>
 
 Run migrations
 ```
@@ -50,6 +53,7 @@ python manage.py migrate
 cd eventspot
 python3 manage.py migrate
 ```
+<br>
 
 Run server
 ```
@@ -60,6 +64,7 @@ python manage.py runserver
 cd eventspot
 python3 manage.py runserver
 ```
+<br>
 
 ## Frontend (VueJs)
 ### Requirements
@@ -71,8 +76,10 @@ Vue Setup
 cd eventspot/vueapp/vueeventspot
 npm install
 ```
+<br>
 
 Run Server
 ```
 npm run serve
 ```
+<br>

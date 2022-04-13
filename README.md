@@ -8,11 +8,29 @@ EventSpot is a website for sharing your events. You can create an event, associa
 - Python
 ### Setup
 
+Clone the project
 ```
 git clone git@github.com:HE-Arc/EventSpot.git
 ```
 
+Create virtual environment
+```
+# Windows
+python -m venv .venv
+# Linux
+python3 -m venv .venv
 ## Frontend (VueJs)
+```
+
+Activate virtual
+```
+# Windows
+source .venv/Scripts/activate
+# Linux
+source .venv/bin/activate
+```
+
+
 ### Requirements
 
 ### Setup

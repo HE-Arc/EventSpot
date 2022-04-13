@@ -19,7 +19,6 @@ Create virtual environment
 python -m venv .venv
 # Linux
 python3 -m venv .venv
-## Frontend (VueJs)
 ```
 
 Activate virtual
@@ -47,6 +46,8 @@ python manage.py runserver
 cd eventspot
 python3 manage.py runserver
 ```
+
+## Frontend (VueJs)
 ### Requirements
 
 ### Setup

@@ -30,7 +30,23 @@ source .venv/Scripts/activate
 source .venv/bin/activate
 ```
 
+Install all Python requirements
+```
+# Windows
+pip install -r requirements.txt
+# Linux
+pip3 install -r requirements.txt
+```
 
+Run server
+```
+# Windows
+cd eventspot
+python manage.py runserver
+# Linux
+cd eventspot
+python3 manage.py runserver
+```
 ### Requirements
 
 ### Setup

@@ -62,6 +62,13 @@ python3 manage.py runserver
 - NodeJs
 ### Setup
 
+Vue Setup
+```
+cd eventspot/vueapp/vueeventspot
+npm install
 ```
 
+Run Server
+```
+npm run serve
 ```
